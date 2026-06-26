@@ -3,423 +3,724 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Simulador — Adhesión al Servicio</title>
+  <title>Simulador — Liderazgo Asociados</title>
   <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#F3F4F6;min-height:100vh}
-    .header{background:#0D1B6E;padding:16px 20px;text-align:center}
-    .header h1{color:#fff;font-size:18px;font-weight:700}
-    .header p{color:rgba(255,255,255,.65);font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-top:3px}
-    .prog-wrap{background:#fff;padding:12px 20px;border-bottom:1px solid #E5E7EB}
-    .prog-bar{display:flex;gap:4px;max-width:380px;margin:0 auto}
-    .pb{flex:1;height:5px;border-radius:3px;background:#E5E7EB;transition:background .3s}
-    .pb.done{background:#0D1B6E}.pb.active{background:#3B82F6}
-    .prog-label{text-align:center;font-size:11px;color:#9CA3AF;margin-top:6px;max-width:380px;margin-left:auto;margin-right:auto}
-    .container{max-width:460px;margin:20px auto;padding:0 14px 80px}
-    .step{display:none}.step.active{display:block}
-    .card{background:#fff;border-radius:16px;box-shadow:0 2px 16px rgba(0,0,0,.08);overflow:hidden;margin-bottom:14px}
-    .card-hdr{background:#0D1B6E;color:#fff;padding:20px 22px}
-    .card-hdr h2{font-size:17px;font-weight:700;margin-bottom:3px}
-    .card-hdr p{font-size:12px;color:rgba(255,255,255,.7)}
-    .card-hdr.green{background:#065F46}
-    .card-hdr.teal{background:#134E4A}
-    .card-body{padding:22px}
+    :root {
+      --primary:       #0D1B6E;
+      --primary-light: #1A2FAD;
+      --accent:        #DC2626;
+      --accent-light:  #FEE2E2;
+      --green:         #16A34A;
+      --green-light:   #DCFCE7;
+      --text:          #111827;
+      --muted:         #6B7280;
+      --border:        #E5E7EB;
+      --bg:            #F3F4F6;
+      --white:         #FFFFFF;
+      --wa:            #25D366;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
 
-    /* Benefits */
-    .benefit{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid #F3F4F6}
-    .benefit:last-child{border-bottom:none}
-    .bi{font-size:20px;flex-shrink:0;padding-top:1px}
-    .bt h4{font-size:13px;font-weight:700;color:#111827;margin-bottom:2px}
-    .bt p{font-size:12px;color:#6B7280;line-height:1.45}
+    /* ── CARD ── */
+    .card {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.12);
+      width: 100%;
+      max-width: 460px;
+      overflow: hidden;
+    }
+    .card-header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 28px 24px 22px;
+      text-align: center;
+      color: var(--white);
+    }
+    .brand-name    { font-size: 20px; font-weight: 800; letter-spacing: -0.3px; }
+    .brand-tagline { font-size: 12px; opacity: 0.7; margin-top: 3px; text-transform: uppercase; letter-spacing: 0.8px; }
 
-    /* Plan cards */
-    .plan{border:2px solid #E5E7EB;border-radius:12px;padding:16px;margin-bottom:10px;cursor:pointer;transition:all .2s;position:relative}
-    .plan.sel{border-color:#0D1B6E;background:#EEF2FF}
-    .plan-badge{position:absolute;top:-10px;right:14px;background:#DC2626;color:#fff;font-size:10px;font-weight:700;padding:2px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.5px}
-    .plan-title{font-size:13px;font-weight:700;color:#6B7280;margin-bottom:3px}
-    .plan-price{font-size:24px;font-weight:800;color:#0D1B6E;line-height:1}
-    .plan-price span{font-size:13px;font-weight:400;color:#9CA3AF}
-    .plan-desc{font-size:12px;color:#6B7280;margin-top:4px}
+    /* ── PROGRESS ── */
+    .progress-wrap { background: #E8EAF6; height: 5px; }
+    .progress-bar  { height: 100%; background: var(--wa); transition: width 0.45s ease; }
 
-    /* Date options */
-    .date-opt{border:2px solid #E5E7EB;border-radius:10px;padding:12px 16px;margin-bottom:8px;cursor:pointer;transition:all .2s;display:flex;justify-content:space-between;align-items:center}
-    .date-opt.sel{border-color:#0D1B6E;background:#EEF2FF}
-    .do-label{font-size:14px;font-weight:600;color:#111827}
-    .do-sub{font-size:12px;color:#6B7280;margin-top:2px}
-    .do-check{width:20px;height:20px;border-radius:50%;border:2px solid #D1D5DB;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s}
-    .do-check.sel{background:#0D1B6E;border-color:#0D1B6E;color:#fff;font-size:11px}
+    .step-label {
+      display: flex; align-items: center; gap: 8px;
+      padding: 11px 20px; border-bottom: 1px solid var(--border);
+      font-size: 12.5px; color: var(--muted); transition: opacity 0.2s;
+    }
+    .step-num {
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--primary); color: var(--white);
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
 
-    /* Summary */
-    .sum-box{background:#F9FAFB;border:1px solid #E5E7EB;border-radius:10px;padding:14px 16px;margin-bottom:16px}
-    .sum-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid #F3F4F6}
-    .sum-row:last-child{border-bottom:none}
-    .sl{color:#6B7280}.sv{font-weight:600;color:#111827}
+    .card-body { padding: 28px 24px 24px; }
+    .step-title { font-size: 19px; font-weight: 700; color: var(--text); margin-bottom: 5px; }
+    .step-desc  { font-size: 13.5px; color: var(--muted); line-height: 1.55; margin-bottom: 22px; }
 
-    /* Trust */
-    .trust-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:14px 0}
-    .ti{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:60px}
-    .ti-icon{font-size:22px}
-    .ti-label{font-size:10px;color:#6B7280;text-align:center;font-weight:600;text-transform:uppercase;letter-spacing:.2px;line-height:1.2}
+    /* ── FORM ── */
+    .field { margin-bottom: 16px; }
+    label  { display: block; font-size: 12.5px; font-weight: 600; color: var(--text); margin-bottom: 5px; }
+    input  {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 15px; color: var(--text);
+      outline: none; transition: border-color .2s, box-shadow .2s; background: var(--white);
+    }
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(13,27,110,.08); }
+    input.has-error { border-color: var(--accent); }
+    .field-err { font-size: 11.5px; color: var(--accent); margin-top: 4px; display: none; }
 
-    /* Card logos */
-    .logos{display:flex;gap:6px;justify-content:center;margin:10px 0 4px;flex-wrap:wrap}
-    .logo{padding:4px 10px;border:1.5px solid #E5E7EB;border-radius:6px;font-size:11px;font-weight:800}
-    .logo.visa{color:#1434CB;border-color:#1434CB}
-    .logo.mc{color:#EB001B;border-color:#EB001B}
-    .logo.amex{color:#007BC1;border-color:#007BC1}
-    .logo.nj{background:#FF6B00;color:#fff;border-color:#FF6B00}
-    .logo.mp{background:#009EE3;color:#fff;border-color:#009EE3}
+    /* ── BUTTONS ── */
+    .btn {
+      width: 100%; padding: 14px; border: none; border-radius: 10px;
+      font-size: 15.5px; font-weight: 700; cursor: pointer;
+      transition: opacity .2s, transform .1s; margin-top: 4px;
+    }
+    .btn:active { transform: scale(.985); }
+    .btn-primary { background: var(--primary); color: var(--white); }
+    .btn-primary:hover { opacity: .88; }
+    .btn-red { background: var(--accent); color: var(--white); }
+    .btn-red:hover { opacity: .88; }
+    .btn-yellow { background: #F59E0B; color: #1A1A1A; }
+    .btn-yellow:hover { opacity: .88; }
+    .btn-ghost  { background: var(--bg); color: var(--muted); font-weight: 600; margin-top: 8px; }
+    .btn-ghost:hover { background: var(--border); }
+    .btn-wa {
+      background: var(--wa); color: var(--white);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      font-size: 16px; text-decoration: none; border-radius: 10px;
+      padding: 14px; font-weight: 700; transition: opacity .2s; border: none; cursor: pointer; width: 100%;
+    }
+    .btn-wa:hover { opacity: .9; }
+    .disclaimer { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.5; }
 
-    /* Buttons */
-    .btn{width:100%;padding:15px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:14px;letter-spacing:.2px}
-    .btn-main{background:#0D1B6E;color:#fff}
-    .btn-main:hover{background:#1a2d8f}
-    .btn-card{background:#0D1B6E;color:#fff;margin-top:0;margin-bottom:10px;border-radius:12px;padding:15px;width:100%;border:none;font-size:15px;font-weight:700;cursor:pointer}
-    .btn-nave{background:#F0B429;color:#1A1A1A;border-radius:12px;padding:15px;width:100%;border:none;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:10px}
-    .btn-wa{display:block;width:100%;padding:14px;background:#25D366;color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none;margin-top:12px}
+    /* ── LOADING ── */
+    #stepLoading .card-body { padding: 44px 24px; text-align: center; }
+    .spinner {
+      width: 64px; height: 64px; border: 5px solid #E8EAF6;
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin .9s linear infinite; margin: 0 auto 20px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 18px; }
+    .loading-steps { display: flex; flex-direction: column; gap: 9px; text-align: left; }
+    .ls { font-size: 13px; color: var(--muted); opacity: 0; transition: opacity .4s; display: flex; align-items: center; gap: 7px; }
+    .ls.show { opacity: 1; }
+    .ls.done { color: var(--green); }
+    .ls .ic  { width: 16px; flex-shrink: 0; }
 
-    /* Alert */
-    .alert{background:#FFF7ED;border:1px solid #FED7AA;border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;color:#92400E;line-height:1.4}
+    /* ── RESULTADO ── */
+    #stepResult .card-body { padding: 32px 24px 28px; text-align: center; }
+    .score-ring {
+      width: 100px; height: 100px; border-radius: 50%;
+      background: var(--accent-light); border: 5px solid var(--accent);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
+    }
+    .ring-icon  { font-size: 30px; line-height: 1; }
+    .ring-label { font-size: 10px; font-weight: 800; color: var(--accent); letter-spacing: 1.2px; margin-top: 2px; }
+    .sbar-wrap { margin: 0 0 6px; }
+    .sbar-track {
+      height: 12px; border-radius: 6px;
+      background: linear-gradient(90deg, #16A34A 0%, #FACC15 45%, #DC2626 100%);
+      position: relative; margin-bottom: 5px;
+    }
+    .sbar-needle {
+      position: absolute; top: -5px; width: 4px; height: 22px;
+      background: #111827; border-radius: 2px; left: 85%;
+      transform: translateX(-50%); box-shadow: 0 0 0 2px white;
+    }
+    .sbar-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--muted); }
+    .result-title { font-size: 21px; font-weight: 800; color: var(--accent); margin: 14px 0 8px; }
+    .result-msg   { font-size: 13.5px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+    .notice {
+      background: var(--green-light); border: 1.5px solid #86EFAC;
+      border-radius: 10px; padding: 12px 15px; font-size: 13px;
+      color: #15803D; text-align: left; margin-bottom: 20px;
+    }
+    .notice strong { display: block; margin-bottom: 2px; font-size: 13.5px; }
+    .backend-err {
+      background: var(--accent-light); border: 1.5px solid #FCA5A5;
+      border-radius: 10px; padding: 10px 14px; font-size: 12.5px;
+      color: #B91C1C; margin-bottom: 14px; display: none;
+    }
+    .cta-label { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 12px; }
+    .divider { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
-    /* Success */
-    .success-icon{width:72px;height:72px;background:#D1FAE5;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin:0 auto 14px}
-    .success-title{font-size:20px;font-weight:800;color:#111827;text-align:center;margin-bottom:8px}
-    .success-sub{font-size:13px;color:#6B7280;text-align:center;line-height:1.5}
+    /* ── BENEFICIOS ── */
+    .benefit { display: flex; align-items: flex-start; gap: 12px; padding: 11px 0; border-bottom: 1px solid #F3F4F6; }
+    .benefit:last-child { border-bottom: none; }
+    .bi  { font-size: 20px; flex-shrink: 0; padding-top: 1px; }
+    .bt h4 { font-size: 13px; font-weight: 700; color: #111827; margin-bottom: 2px; }
+    .bt p  { font-size: 12px; color: #6B7280; line-height: 1.45; }
+    .alert-box {
+      background: #FFF7ED; border: 1px solid #FED7AA; border-radius: 10px;
+      padding: 12px 16px; margin-top: 14px; font-size: 13px; color: #92400E; line-height: 1.4;
+    }
 
-    .footer{text-align:center;font-size:10px;color:#9CA3AF;line-height:1.7;padding:10px 0 20px}
-    .divider{border:none;border-top:1px solid #E5E7EB;margin:14px 0}
-    .sec-label{font-size:11px;color:#9CA3AF;text-align:center;margin:6px 0 12px;text-transform:uppercase;letter-spacing:.5px}
+    /* ── PLAN ── */
+    .plan {
+      border: 2px solid var(--border); border-radius: 12px; padding: 16px;
+      margin-bottom: 10px; cursor: pointer; transition: all .2s; position: relative;
+    }
+    .plan.sel  { border-color: var(--primary); background: #EEF2FF; }
+    .plan-badge {
+      position: absolute; top: -10px; right: 14px;
+      background: var(--accent); color: var(--white);
+      font-size: 10px; font-weight: 700; padding: 2px 10px;
+      border-radius: 20px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    .plan-title { font-size: 13px; font-weight: 700; color: var(--muted); margin-bottom: 3px; }
+    .plan-price { font-size: 24px; font-weight: 800; color: var(--primary); line-height: 1; }
+    .plan-price span { font-size: 13px; font-weight: 400; color: var(--muted); }
+    .plan-desc  { font-size: 12px; color: var(--muted); margin-top: 4px; }
+
+    /* ── FECHA ── */
+    .date-opt {
+      border: 2px solid var(--border); border-radius: 10px; padding: 12px 16px;
+      margin-bottom: 8px; cursor: pointer; transition: all .2s;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .date-opt.sel { border-color: var(--primary); background: #EEF2FF; }
+    .do-label { font-size: 14px; font-weight: 600; color: #111827; }
+    .do-sub   { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .do-check {
+      width: 20px; height: 20px; border-radius: 50%; border: 2px solid #D1D5DB;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: all .2s; font-size: 11px;
+    }
+    .do-check.sel { background: var(--primary); border-color: var(--primary); color: var(--white); }
+
+    /* ── RESUMEN / TRUST ── */
+    .sum-box  { background: #F9FAFB; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; }
+    .sum-row  { display: flex; justify-content: space-between; padding: 5px 0; font-size: 13px; border-bottom: 1px solid #F3F4F6; }
+    .sum-row:last-child { border-bottom: none; }
+    .sl { color: var(--muted); }
+    .sv { font-weight: 600; color: var(--text); }
+    .trust-row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; padding: 12px 0; }
+    .ti { display: flex; flex-direction: column; align-items: center; gap: 3px; flex: 1; min-width: 58px; }
+    .ti-icon  { font-size: 20px; }
+    .ti-label { font-size: 9px; color: var(--muted); text-align: center; font-weight: 600; text-transform: uppercase; letter-spacing: .2px; line-height: 1.2; }
+    .logos { display: flex; gap: 6px; justify-content: center; margin: 8px 0 4px; flex-wrap: wrap; }
+    .logo { padding: 4px 10px; border: 1.5px solid var(--border); border-radius: 6px; font-size: 11px; font-weight: 800; }
+    .logo.visa { color: #1434CB; border-color: #1434CB; }
+    .logo.mc   { color: #EB001B; border-color: #EB001B; }
+    .logo.amex { color: #007BC1; border-color: #007BC1; }
+    .logo.nj   { background: #FF6B00; color: #fff; border-color: #FF6B00; }
+    .logo.mp   { background: #009EE3; color: #fff; border-color: #009EE3; }
+    .sec-label { font-size: 11px; color: var(--muted); text-align: center; margin: 6px 0 10px; text-transform: uppercase; letter-spacing: .5px; }
+
+    /* ── ÉXITO ── */
+    .success-icon {
+      width: 72px; height: 72px; background: var(--green-light);
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 14px;
+    }
+    .success-title { font-size: 20px; font-weight: 800; color: var(--text); text-align: center; margin-bottom: 8px; }
+    .success-sub   { font-size: 13px; color: var(--muted); text-align: center; line-height: 1.5; margin-bottom: 20px; }
+    .success-items { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+    .si { display: flex; align-items: center; gap: 10px; font-size: 13px; color: #065F46; }
+    .si-check { width: 22px; height: 22px; background: var(--green-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+
+    /* ── STEPS ── */
+    .step { display: none; }
+    .step.active { display: block; }
+
+    @media (max-width: 400px) {
+      .brand-name { font-size: 17px; }
+      .step-title { font-size: 17px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="header">
-  <h1>Liderazgo Asociados</h1>
-  <p>Asesoría &amp; Gestión</p>
-</div>
+<div class="card">
 
-<div class="prog-wrap">
-  <div class="prog-bar">
-    <div class="pb active" id="pb1"></div>
-    <div class="pb" id="pb2"></div>
-    <div class="pb" id="pb3"></div>
-    <div class="pb" id="pb4"></div>
+  <!-- HEADER -->
+  <div class="card-header">
+    <div class="brand-name">Liderazgo Asociados</div>
+    <div class="brand-tagline">Asesoría &amp; Gestión</div>
   </div>
-  <div class="prog-label" id="prog-label">Paso 1 de 4 — Conocé el servicio</div>
-</div>
 
-<div class="container">
+  <!-- PROGRESS -->
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progressBar" style="width:14%"></div>
+  </div>
 
-  <!-- ── STEP 1: Servicio ─────────────────────────────── -->
-  <div class="step active" id="step1">
-    <div class="card">
-      <div class="card-hdr">
-        <h2>Podemos ayudarte a salir del Veraz</h2>
-        <p>Nuestro equipo de especialistas ya está revisando tu caso</p>
+  <!-- STEP LABEL -->
+  <div class="step-label" id="stepLabel">
+    <div class="step-num" id="stepNum">1</div>
+    <span id="stepText">Paso 1 — Datos personales</span>
+  </div>
+
+  <!-- ══ PASO 1: Datos personales ══ -->
+  <div id="step1" class="step active">
+    <div class="card-body">
+      <div class="step-title">Consultá tu situación</div>
+      <div class="step-desc">Completá tus datos para iniciar la verificación de tu puntaje actual.</div>
+
+      <div class="field">
+        <label for="nombre">Nombre completo *</label>
+        <input type="text" id="nombre" placeholder="Ej: María González" autocomplete="name">
+        <div class="field-err" id="err-nombre">Ingresá tu nombre completo</div>
       </div>
-      <div class="card-body">
-        <div class="benefit">
-          <span class="bi">📋</span>
-          <div class="bt">
-            <h4>Análisis personalizado de tu caso</h4>
-            <p>Estudiamos tu historial completo y detectamos qué datos incorrectos o caducados están afectando tu perfil financiero.</p>
-          </div>
-        </div>
-        <div class="benefit">
-          <span class="bi">⚖️</span>
-          <div class="bt">
-            <h4>Gestión legal bajo Ley 25.326</h4>
-            <p>Iniciamos formalmente el reclamo ante Veraz amparado en la Ley de Protección de Datos Personales y sus modificatorias.</p>
-          </div>
-        </div>
-        <div class="benefit">
-          <span class="bi">🔒</span>
-          <div class="bt">
-            <h4>Gestión de rectificación y supresión</h4>
-            <p>Realizamos todas las diligencias de investigación e intimación formal para la supresión de tus datos de las bases.</p>
-          </div>
-        </div>
-        <div class="benefit">
-          <span class="bi">📄</span>
-          <div class="bt">
-            <h4>Constancia oficial de eliminación</h4>
-            <p>Recibís la constancia para presentar en bancos y financieras. El resultado se observa en 5 días hábiles desde el inicio.</p>
-          </div>
-        </div>
-        <div class="benefit">
-          <span class="bi">🤝</span>
-          <div class="bt">
-            <h4>Sin trámites — nosotros lo gestionamos</h4>
-            <p>No necesitás hacer nada. Nuestro equipo de más de 30 años de trayectoria lleva el proceso de principio a fin.</p>
-          </div>
-        </div>
+
+      <div class="field">
+        <label for="telefono">Teléfono / WhatsApp *</label>
+        <input type="tel" id="telefono" placeholder="Ej: 3511234567" autocomplete="tel" inputmode="tel">
+        <div class="field-err" id="err-telefono">Ingresá exactamente 10 dígitos (ej: 3511234567)</div>
       </div>
-    </div>
 
-    <div class="alert">
-      ⏰ <strong>Tu expediente ya fue generado.</strong> Para no perder el beneficio de gestión preferencial, es importante confirmar hoy.
-    </div>
+      <div class="field">
+        <label for="email">Email *</label>
+        <input type="email" id="email" placeholder="Ej: maria@gmail.com" autocomplete="email">
+        <div class="field-err" id="err-email">Ingresá un email válido</div>
+      </div>
 
-    <button class="btn btn-main" onclick="goTo(2)">Quiero iniciar el proceso →</button>
-
-    <div class="footer">
-      APG Global SRL · CUIT 30-71692136-7<br>
-      Adolfo Alsina 1433, piso 4, of. B2 · CABA
+      <button class="btn btn-primary" onclick="irAPaso2()">Continuar →</button>
+      <p class="disclaimer">🔒 Tus datos son confidenciales y se usan exclusivamente para esta consulta.</p>
     </div>
   </div>
 
-  <!-- ── STEP 2: Plan de pago ─────────────────────────── -->
-  <div class="step" id="step2">
-    <div class="card">
-      <div class="card-hdr green">
-        <h2>🎉 ¡Felicitaciones!</h2>
-        <p id="s2msg">Ya estamos trabajando en tu caso. Elegí cómo querés pagar.</p>
+  <!-- ══ PASO 2: DNI ══ -->
+  <div id="step2" class="step">
+    <div class="card-body">
+      <div class="step-title">Verificá tu puntaje</div>
+      <div class="step-desc">Ingresá tu DNI para consultar tu situación en las principales bases crediticias del país.</div>
+
+      <div class="field">
+        <label for="dni">Número de DNI *</label>
+        <input type="text" id="dni" placeholder="Ej: 30123456" inputmode="numeric" maxlength="9">
+        <div class="field-err" id="err-dni">Ingresá un DNI válido (7 u 8 dígitos)</div>
       </div>
-      <div class="card-body">
 
-        <h3 style="font-size:12px;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px">Plan de servicio</h3>
-
-        <div class="plan sel" id="plan2c" onclick="selectPlan('2c')">
-          <div class="plan-badge">Recomendado</div>
-          <div class="plan-title">2 cuotas</div>
-          <div class="plan-price">$48.100 <span>/ cuota</span></div>
-          <div class="plan-desc">Total $96.200 · Sin interés</div>
-        </div>
-
-        <div class="plan" id="plan1c" onclick="selectPlan('1c')">
-          <div class="plan-title">1 cuota</div>
-          <div class="plan-price">$96.200</div>
-          <div class="plan-desc">Pago único · Consultá con tu asesor</div>
-        </div>
-
-        <h3 style="font-size:12px;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin:20px 0 12px">¿Cuándo realizás el primer pago?</h3>
-
-        <div class="date-opt sel" id="dhoy" onclick="selDate('hoy')">
-          <div><div class="do-label">📅 Hoy</div><div class="do-sub" id="lhoy">—</div></div>
-          <div class="do-check sel" id="choy">✓</div>
-        </div>
-        <div class="date-opt" id="dman" onclick="selDate('man')">
-          <div><div class="do-label">📅 Mañana</div><div class="do-sub" id="lman">—</div></div>
-          <div class="do-check" id="cman"></div>
-        </div>
-        <div class="date-opt" id="d3d" onclick="selDate('3d')">
-          <div><div class="do-label">📅 3 días hábiles</div><div class="do-sub" id="l3d">—</div></div>
-          <div class="do-check" id="c3d"></div>
-        </div>
-      </div>
-    </div>
-    <button class="btn btn-main" onclick="goTo(3)">Continuar al pago →</button>
-  </div>
-
-  <!-- ── STEP 3: Pago ──────────────────────────────────── -->
-  <div class="step" id="step3">
-    <div class="card">
-      <div class="card-body">
-        <h2 style="font-size:16px;font-weight:700;color:#111827;margin-bottom:14px">Resumen del acuerdo</h2>
-        <div class="sum-box">
-          <div class="sum-row"><span class="sl">Titular</span><span class="sv" id="sum_nombre">—</span></div>
-          <div class="sum-row"><span class="sl">DNI</span><span class="sv" id="sum_dni">—</span></div>
-          <div class="sum-row"><span class="sl">Plan</span><span class="sv" id="sum_plan">—</span></div>
-          <div class="sum-row"><span class="sl">Primer pago</span><span class="sv" id="sum_fecha">—</span></div>
-          <div class="sum-row"><span class="sl">Estado</span><span class="sv" style="color:#059669">🟢 En gestión</span></div>
-        </div>
-
-        <div class="trust-row">
-          <div class="ti"><span class="ti-icon">🔒</span><span class="ti-label">Pago<br>seguro</span></div>
-          <div class="ti"><span class="ti-icon">🛡️</span><span class="ti-label">Datos<br>protegidos</span></div>
-          <div class="ti"><span class="ti-icon">✅</span><span class="ti-label">30+ años<br>trayectoria</span></div>
-          <div class="ti"><span class="ti-icon">📋</span><span class="ti-label">Contrato<br>legal</span></div>
-          <div class="ti"><span class="ti-icon">⚖️</span><span class="ti-label">Ley<br>25.326</span></div>
-        </div>
-
-        <div class="logos">
-          <span class="logo visa">VISA</span>
-          <span class="logo mc">Mastercard</span>
-          <span class="logo amex">AMEX</span>
-          <span class="logo nj">Naranja X</span>
-          <span class="logo mp">Mercado Pago</span>
-        </div>
-
-        <hr class="divider">
-
-        <div class="sec-label">Elegí tu método de pago</div>
-
-        <button class="btn-card" onclick="pagar('card')">💳 Pagar con tarjeta de crédito</button>
-        <button class="btn-nave" id="btnNave" onclick="pagar('nave')">🏦 Pagar con NAVE</button>
-
-        <p style="font-size:11px;color:#9CA3AF;text-align:center;margin-top:6px">
-          Al confirmar el pago recibís tu contrato automáticamente por email
-        </p>
-      </div>
-    </div>
-
-    <div class="footer">
-      APG Global SRL · CUIT 30-71692136-7<br>
-      Adolfo Alsina 1433, piso 4, of. B2 · CABA<br>
-      gestiones@firmalimpia.com
+      <button class="btn btn-primary" onclick="verificar()">🔍 Verificar puntaje</button>
+      <button class="btn btn-ghost"   onclick="volverAPaso1()">← Volver</button>
+      <p class="disclaimer">Consulta sin impacto en tu historial. Sin costo.</p>
     </div>
   </div>
 
-  <!-- ── STEP 4: Éxito ─────────────────────────────────── -->
-  <div class="step" id="step4">
-    <div class="card">
-      <div class="card-body" style="text-align:center;padding:30px 22px">
-        <div class="success-icon">✅</div>
-        <div class="success-title">¡Todo listo!</div>
-        <p class="success-sub">
-          Tu contrato fue enviado a <strong id="s4email">tu email</strong>.<br>
-          Nuestro equipo ya está gestionando tu caso de forma prioritaria.
-        </p>
-
-        <div class="sum-box" style="text-align:left;margin-top:18px">
-          <div class="sum-row"><span class="sl">Servicio</span><span class="sv">Salida del Veraz</span></div>
-          <div class="sum-row"><span class="sl">Plan</span><span class="sv" id="s4plan">—</span></div>
-          <div class="sum-row"><span class="sl">Primer pago</span><span class="sv" id="s4fecha">—</span></div>
-          <div class="sum-row"><span class="sl">Estado</span><span class="sv" style="color:#059669">🟢 En gestión</span></div>
-        </div>
-
-        <p style="font-size:13px;color:#6B7280;margin:16px 0 4px">¿Tenés alguna consulta? Hablá con tu asesor</p>
-        <a href="#" id="waBtn" class="btn-wa">💬 Hablar por WhatsApp</a>
+  <!-- ══ CARGANDO ══ -->
+  <div id="stepLoading" class="step">
+    <div class="card-body">
+      <div class="spinner"></div>
+      <div class="loading-title">Verificando tu situación...</div>
+      <div class="loading-steps">
+        <div class="ls" id="ls1"><span class="ic">🔍</span> Consultando bases de datos...</div>
+        <div class="ls" id="ls2"><span class="ic">📋</span> Analizando historial de pagos...</div>
+        <div class="ls" id="ls3"><span class="ic">📊</span> Calculando puntaje...</div>
+        <div class="ls" id="ls4"><span class="ic">📄</span> Generando informe personalizado...</div>
       </div>
-    </div>
-
-    <div class="footer">
-      APG Global SRL · CUIT 30-71692136-7<br>
-      Adolfo Alsina 1433, piso 4, of. B2 · CABA
     </div>
   </div>
 
-</div><!-- /container -->
+  <!-- ══ RESULTADO ══ -->
+  <div id="stepResult" class="step">
+    <div class="card-body">
+      <div class="score-ring">
+        <div class="ring-icon">⚠️</div>
+        <div class="ring-label">DENEGADO</div>
+      </div>
+
+      <div class="sbar-wrap">
+        <div class="sbar-track"><div class="sbar-needle"></div></div>
+        <div class="sbar-labels">
+          <span>Sin riesgo</span><span>Riesgo medio</span><span>Riesgo alto</span>
+        </div>
+      </div>
+
+      <div class="result-title">Puntaje Bajo</div>
+      <div class="result-msg" id="resultMsg">
+        Encontramos <strong>observaciones en tu historial</strong> que impiden la aprobación automática.
+        Sin embargo, tenemos la solución para tu caso.
+      </div>
+
+      <div class="notice" id="noticeEmail">
+        <strong>📧 Informe enviado a tu email</strong>
+        Te enviamos el informe completo con tu situación y los pasos a seguir.
+      </div>
+      <div class="backend-err" id="backendErr">
+        No pudimos enviar el informe por email. Pero podés hablar con un asesor ahora mismo.
+      </div>
+
+      <div class="cta-label">¿Querés resolver esto hoy?</div>
+      <button class="btn btn-red" onclick="irAServicio()" style="margin-bottom:10px;">
+        ⚡ Sí, quiero salir del Veraz
+      </button>
+
+      <hr class="divider">
+
+      <a id="btnWa" href="#" class="btn-wa">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.196 6.354L4 29l7.834-2.17A12.94 12.94 0 0016 28c6.627 0 12-5.373 12-12S22.627 3 16 3zm6.406 16.656c-.275.77-1.593 1.473-2.187 1.563-.556.084-1.26.12-2.032-.127a18.63 18.63 0 01-1.839-.68C14.01 19.44 11.8 17.18 11.07 16.18c-.73-1-1.193-2.108-1.193-3.217 0-1.11.49-1.65.678-1.875.187-.224.41-.28.547-.28l.39.007c.125.005.293-.048.458.35.175.42.592 1.45.644 1.556.053.105.088.228.018.366-.07.14-.105.225-.21.347-.105.12-.22.269-.314.362-.105.1-.215.21-.093.41.125.2.556.918 1.194 1.487.82.732 1.51 1.006 1.72 1.12.21.11.333.092.456-.056.125-.148.533-.623.676-.837.143-.215.285-.18.48-.108.193.072 1.225.578 1.437.683.21.104.35.156.4.242.052.085.052.49-.223 1.26z"/>
+        </svg>
+        Hablar con un asesor ahora
+      </a>
+      <p class="disclaimer" style="margin-top:14px;">
+        Nuestros asesores analizan tu caso sin costo ni compromiso y te explican las opciones disponibles.
+      </p>
+    </div>
+  </div>
+
+  <!-- ══ SERVICIO ══ -->
+  <div id="stepServicio" class="step">
+    <div class="card-body">
+      <div class="step-title">Podemos ayudarte a salir del Veraz</div>
+      <div class="step-desc">Nuestro equipo de especialistas gestionará tu caso de principio a fin.</div>
+
+      <div class="benefit">
+        <span class="bi">📋</span>
+        <div class="bt">
+          <h4>Análisis personalizado de tu caso</h4>
+          <p>Estudiamos tu historial completo y detectamos qué datos incorrectos o caducados están afectando tu perfil.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <span class="bi">⚖️</span>
+        <div class="bt">
+          <h4>Gestión legal bajo Ley 25.326</h4>
+          <p>Iniciamos formalmente el reclamo ante Veraz amparado en la Ley de Protección de Datos Personales.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <span class="bi">🔒</span>
+        <div class="bt">
+          <h4>Rectificación y supresión de datos</h4>
+          <p>Realizamos todas las diligencias formales para la supresión de tus datos de las bases.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <span class="bi">📄</span>
+        <div class="bt">
+          <h4>Constancia oficial de eliminación</h4>
+          <p>Recibís la constancia para presentar en bancos y financieras. Resultado en 5 días hábiles.</p>
+        </div>
+      </div>
+      <div class="benefit">
+        <span class="bi">🛡️</span>
+        <div class="bt">
+          <h4>Sin trámites — nosotros lo gestionamos</h4>
+          <p>No necesitás hacer nada. Más de 30 años de trayectoria avalan nuestro servicio.</p>
+        </div>
+      </div>
+
+      <div class="alert-box">
+        ⏰ <strong>Tu expediente ya fue generado.</strong> Para no perder el beneficio de gestión preferencial, es importante confirmar hoy.
+      </div>
+
+      <button class="btn btn-primary" onclick="irAPlan()" style="margin-top:16px;">
+        Ver opciones de pago →
+      </button>
+    </div>
+  </div>
+
+  <!-- ══ PLAN ══ -->
+  <div id="stepPlan" class="step">
+    <div class="card-body">
+      <div class="step-title">Elegí tu plan</div>
+      <div class="step-desc">Seleccioná la opción que mejor se adapta a vos.</div>
+
+      <div class="plan sel" id="plan2c" onclick="selPlan(2, 48100)">
+        <div class="plan-badge">Recomendado</div>
+        <div class="plan-title">2 cuotas</div>
+        <div class="plan-price">$48.100 <span>/ cuota</span></div>
+        <div class="plan-desc">Total $96.200 · Sin interés</div>
+      </div>
+
+      <div class="plan" id="plan1c" onclick="selPlan(1, 96200)">
+        <div class="plan-title">1 cuota</div>
+        <div class="plan-price">$96.200 <span>único pago</span></div>
+        <div class="plan-desc">Pago total de contado</div>
+      </div>
+
+      <div class="step-title" style="margin-top:20px;font-size:15px;">Fecha del primer pago</div>
+      <p style="font-size:13px;color:var(--muted);margin:4px 0 12px;">¿Cuándo realizás el pago?</p>
+
+      <div class="date-opt sel" id="dHoy"     onclick="selFecha('dHoy')">
+        <div><div class="do-label">Hoy</div><div class="do-sub" id="lblHoy"></div></div>
+        <div class="do-check sel" id="chkHoy">✓</div>
+      </div>
+      <div class="date-opt" id="dManana"  onclick="selFecha('dManana')">
+        <div><div class="do-label">Mañana</div><div class="do-sub" id="lblManana"></div></div>
+        <div class="do-check" id="chkManana"></div>
+      </div>
+      <div class="date-opt" id="d3dias"   onclick="selFecha('d3dias')">
+        <div><div class="do-label">En 3 días hábiles</div><div class="do-sub" id="lbl3dias"></div></div>
+        <div class="do-check" id="chk3dias"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="irAPago()" style="margin-top:16px;">Continuar →</button>
+      <button class="btn btn-ghost"   onclick="irAServicio()">← Volver</button>
+    </div>
+  </div>
+
+  <!-- ══ PAGO ══ -->
+  <div id="stepPago" class="step">
+    <div class="card-body">
+      <div class="step-title">Resumen y pago</div>
+
+      <div class="sum-box">
+        <div class="sum-row"><span class="sl">Servicio</span><span class="sv">Gestión ante Veraz</span></div>
+        <div class="sum-row"><span class="sl">Plan</span>   <span class="sv" id="resumenPlan"></span></div>
+        <div class="sum-row"><span class="sl">Monto</span>  <span class="sv" id="resumenMonto"></span></div>
+        <div class="sum-row"><span class="sl">Fecha pago</span><span class="sv" id="resumenFecha"></span></div>
+      </div>
+
+      <div class="trust-row">
+        <div class="ti"><div class="ti-icon">🔒</div><div class="ti-label">Pago<br>Seguro</div></div>
+        <div class="ti"><div class="ti-icon">🛡️</div><div class="ti-label">Datos<br>Protegidos</div></div>
+        <div class="ti"><div class="ti-icon">✅</div><div class="ti-label">Empresa<br>Verificada</div></div>
+        <div class="ti"><div class="ti-icon">⚖️</div><div class="ti-label">Ley<br>25.326</div></div>
+        <div class="ti"><div class="ti-icon">🏆</div><div class="ti-label">30 años<br>trayectoria</div></div>
+      </div>
+
+      <div class="sec-label">Medios de pago aceptados</div>
+      <div class="logos">
+        <span class="logo visa">VISA</span>
+        <span class="logo mc">MC</span>
+        <span class="logo amex">AMEX</span>
+        <span class="logo nj">Naranja X</span>
+        <span class="logo mp">Mercado Pago</span>
+      </div>
+
+      <button class="btn btn-primary" id="btnPagoTarjeta" onclick="pagarTarjeta()" style="margin-top:16px;margin-bottom:8px;">
+        💳 Pagar con tarjeta de crédito
+      </button>
+      <button class="btn btn-yellow" id="btnPagoNave" onclick="pagarNave()">
+        🟡 Pagar con NAVE
+      </button>
+
+      <button class="btn btn-ghost" onclick="irAPlan()">← Volver</button>
+      <p class="disclaimer" style="margin-top:12px;">Al confirmar el pago recibís tu contrato por email automáticamente.</p>
+    </div>
+  </div>
+
+  <!-- ══ ÉXITO ══ -->
+  <div id="stepExito" class="step">
+    <div class="card-body">
+      <div class="success-icon">✅</div>
+      <div class="success-title">¡Ya estamos trabajando en tu caso!</div>
+      <div class="success-sub">Tu contrato fue enviado a tu email. Guardalo como comprobante.</div>
+
+      <div class="success-items">
+        <div class="si"><div class="si-check">✓</div>Contrato generado y enviado por email</div>
+        <div class="si"><div class="si-check">✓</div>Expediente abierto en nuestro sistema</div>
+        <div class="si"><div class="si-check">✓</div>Gestión ante Veraz iniciada</div>
+        <div class="si"><div class="si-check">✓</div>Resultado esperado: 5 días hábiles</div>
+      </div>
+
+      <a id="btnWaFinal" href="#" class="btn-wa">
+        <svg width="20" height="20" viewBox="0 0 32 32" fill="white" xmlns="http://www.w3.org/2000/svg">
+          <path d="M16 3C9.373 3 4 8.373 4 15c0 2.385.832 4.584 2.196 6.354L4 29l7.834-2.17A12.94 12.94 0 0016 28c6.627 0 12-5.373 12-12S22.627 3 16 3zm6.406 16.656c-.275.77-1.593 1.473-2.187 1.563-.556.084-1.26.12-2.032-.127a18.63 18.63 0 01-1.839-.68C14.01 19.44 11.8 17.18 11.07 16.18c-.73-1-1.193-2.108-1.193-3.217 0-1.11.49-1.65.678-1.875.187-.224.41-.28.547-.28l.39.007c.125.005.293-.048.458.35.175.42.592 1.45.644 1.556.053.105.088.228.018.366-.07.14-.105.225-.21.347-.105.12-.22.269-.314.362-.105.1-.215.21-.093.41.125.2.556.918 1.194 1.487.82.732 1.51 1.006 1.72 1.12.21.11.333.092.456-.056.125-.148.533-.623.676-.837.143-.215.285-.18.48-.108.193.072 1.225.578 1.437.683.21.104.35.156.4.242.052.085.052.49-.223 1.26z"/>
+        </svg>
+        Hablar con mi asesor
+      </a>
+      <p class="disclaimer" style="margin-top:12px;">
+        gestiones@firmalimpia.com · APG Global SRL · CUIT 30-71692136-7
+      </p>
+    </div>
+  </div>
+
+</div><!-- /card -->
 
 <script>
-  const GAS_URL     = 'https://script.google.com/macros/s/AKfycbwggkZ5VJg11wgwuuqw5YrsdFOTGbYcIovd2ty38c_ohZWn-BnKTdoe2LUrJ6MrS2DEmg/exec';
-  const WA_DEFAULT  = '5491121847227';
-  const LINK_TARJETA_2C = 'https://gestionesapg.com/48100-2/';
-  const LINK_NAVE   = 'COMPLETAR_LINK_NAVE';
+  // ── CONFIG ────────────────────────────────────────────────────────────────
+  const GAS_SIMULADOR = 'https://script.google.com/macros/s/AKfycby2AEDmjqRUrKAeFeUhLrx0OfOp5UZy2l71zheS8IWZXevj7PkmYlE_YytNPcitXPJXUQ/exec';
+  const GAS_ADHESION  = 'https://script.google.com/macros/s/AKfycbwggkZ5VJg11wgwuuqw5YrsdFOTGbYcIovd2ty38c_ohZWn-BnKTdoe2LUrJ6MrS2DEmg/exec';
+  const WA_DEFAULT    = '5491121847227';
+  const LINK_2C       = 'https://gestionesapg.com/48100-2/';
+  const LINK_NAVE     = null; // completar cuando esté disponible
 
-  const p = new URLSearchParams(location.search);
-  const cli = {
-    nombre: p.get('nombre') || '',
-    email:  p.get('email')  || '',
-    dni:    p.get('dni')    || '',
-    wa:     p.get('wa')     || WA_DEFAULT,
-  };
+  const params    = new URLSearchParams(window.location.search);
+  const WA_NUMBER = params.get('wa') || WA_DEFAULT;
 
-  let selPlan = '2c', selDate = 'hoy', curStep = 1;
+  let datos   = { nombre: '', email: '', telefono: '', dni: '' };
+  let plan    = { cuotas: 2, monto: 48100 };
+  let fechaSel = '';
 
-  // ── Dates ────────────────────────────────────────────────────
-  function addBizDays(date, n) {
-    const d = new Date(date); let added = 0;
-    while (added < n) {
-      d.setDate(d.getDate() + 1);
-      if (d.getDay() !== 0 && d.getDay() !== 6) added++;
-    }
-    return d;
+  // ── Fechas hábiles ────────────────────────────────────────────────────────
+  function addDias(d, n) {
+    const r = new Date(d);
+    r.setDate(r.getDate() + n);
+    return r;
   }
-  function fmt(d) {
+  function addHabiles(d, n) {
+    const r = new Date(d);
+    let c = 0;
+    while (c < n) {
+      r.setDate(r.getDate() + 1);
+      if (r.getDay() !== 0 && r.getDay() !== 6) c++;
+    }
+    return r;
+  }
+  function fmtFecha(d) {
     return d.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
   }
-  const today = new Date();
-  const tom   = new Date(today); tom.setDate(today.getDate() + 1);
-  const biz3  = addBizDays(today, 3);
-  const dates  = { hoy: today, man: tom, '3d': biz3 };
-
-  document.getElementById('lhoy').textContent = fmt(today);
-  document.getElementById('lman').textContent = fmt(tom);
-  document.getElementById('l3d').textContent  = fmt(biz3);
-
-  if (cli.nombre)
-    document.getElementById('s2msg').textContent =
-      cli.nombre + ', ya estamos trabajando en tu caso. Elegí cómo querés pagar.';
-
-  // ── Progress ─────────────────────────────────────────────────
-  const labels = ['','Conocé el servicio','Elegí tu plan','Realizá el pago','¡Todo listo!'];
-  function goTo(n) {
-    document.getElementById('step' + curStep).classList.remove('active');
-    curStep = n;
-    document.getElementById('step' + n).classList.add('active');
-    for (let i = 1; i <= 4; i++) {
-      const el = document.getElementById('pb' + i);
-      el.className = 'pb';
-      if (i < n)  el.classList.add('done');
-      if (i === n) el.classList.add('active');
-    }
-    document.getElementById('prog-label').textContent = 'Paso ' + n + ' de 4 — ' + labels[n];
-    if (n === 3) fillStep3();
-    if (n === 4) fillStep4();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  function initFechas() {
+    const hoy = new Date();
+    document.getElementById('lblHoy').textContent    = fmtFecha(hoy);
+    document.getElementById('lblManana').textContent = fmtFecha(addDias(hoy, 1));
+    document.getElementById('lbl3dias').textContent  = fmtFecha(addHabiles(hoy, 3));
+    fechaSel = fmtFecha(hoy);
   }
-
-  // ── Plan ─────────────────────────────────────────────────────
-  function selectPlan(v) {
-    selPlan = v;
-    document.getElementById('plan2c').classList.toggle('sel', v === '2c');
-    document.getElementById('plan1c').classList.toggle('sel', v === '1c');
-  }
-
-  // ── Date ─────────────────────────────────────────────────────
-  function selDate(v) {
-    selDate = v;
-    ['hoy','man','3d'].forEach(k => {
-      document.getElementById('d' + k).classList.toggle('sel', k === v);
-      const ch = document.getElementById('c' + k);
-      if (k === v) { ch.classList.add('sel'); ch.textContent = '✓'; }
-      else         { ch.classList.remove('sel'); ch.textContent = ''; }
+  function selFecha(id) {
+    ['dHoy','dManana','d3dias'].forEach(x => {
+      document.getElementById(x).classList.remove('sel');
+      const chk = document.getElementById('chk' + x.charAt(0).toUpperCase() + x.slice(1));
+      if (chk) { chk.classList.remove('sel'); chk.textContent = ''; }
     });
+    document.getElementById(id).classList.add('sel');
+    const chkId = 'chk' + id.charAt(0).toUpperCase() + id.slice(1);
+    const chk = document.getElementById(chkId);
+    if (chk) { chk.classList.add('sel'); chk.textContent = '✓'; }
+    fechaSel = document.getElementById('lbl' + id.charAt(0).toUpperCase() + id.slice(1)).textContent;
+  }
+  function selPlan(cuotas, monto) {
+    plan = { cuotas, monto };
+    document.getElementById('plan2c').classList.toggle('sel', cuotas === 2);
+    document.getElementById('plan1c').classList.toggle('sel', cuotas === 1);
   }
 
-  // ── Helpers ──────────────────────────────────────────────────
-  function planText() { return selPlan === '1c' ? '1 cuota de $96.200' : '2 cuotas de $48.100 c/u'; }
-  function dateText() { return fmt(dates[selDate]); }
-
-  function fillStep3() {
-    document.getElementById('sum_nombre').textContent = cli.nombre || '—';
-    document.getElementById('sum_dni').textContent    = cli.dni    || '—';
-    document.getElementById('sum_plan').textContent   = planText();
-    document.getElementById('sum_fecha').textContent  = dateText();
-    document.getElementById('btnNave').textContent    =
-      selPlan === '1c' ? '💬 Contactar asesor para pago único' : '🏦 Pagar con NAVE';
+  // ── Pasos: simulador ──────────────────────────────────────────────────────
+  function irAPaso2() {
+    const nombre   = document.getElementById('nombre').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    setErr('nombre',   nombre.length < 3,                                        'err-nombre');
+    setErr('telefono', !/^\d{10}$/.test(telefono.replace(/[\s\-\+\(\)]/g,'')),  'err-telefono');
+    setErr('email',    !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email),               'err-email');
+    if (!valid('nombre') || !valid('telefono') || !valid('email')) return;
+    datos.nombre   = nombre;
+    datos.telefono = telefono;
+    datos.email    = email;
+    showStep('step2');
+    setLabel(2, 'Paso 2 — Verificación crediticia', 28);
   }
-  function fillStep4() {
-    document.getElementById('s4email').textContent = cli.email || 'tu email';
-    document.getElementById('s4plan').textContent  = planText();
-    document.getElementById('s4fecha').textContent = dateText();
-    const wa = cli.wa || WA_DEFAULT;
-    document.getElementById('waBtn').href = 'https://wa.me/' + wa +
-      '?text=' + encodeURIComponent('Hola! Acabo de confirmar mi adhesión al servicio. ¿Me podés confirmar los próximos pasos?');
+  function volverAPaso1() {
+    showStep('step1');
+    setLabel(1, 'Paso 1 — Datos personales', 14);
+  }
+  function verificar() {
+    const dni = document.getElementById('dni').value.trim().replace(/\./g,'');
+    if (!/^\d{7,8}$/.test(dni)) { setErr('dni', true, 'err-dni'); return; }
+    setErr('dni', false, 'err-dni');
+    datos.dni = dni;
+
+    document.getElementById('stepLabel').style.opacity = '0';
+    showStep('stepLoading');
+    ['ls1','ls2','ls3','ls4'].forEach((id, i) => {
+      setTimeout(() => {
+        document.getElementById(id).classList.add('show');
+        if (i > 0) document.getElementById('ls' + i).classList.add('done');
+      }, i * 900 + 400);
+    });
+
+    fetch(GAS_SIMULADOR, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ ...datos, waNumero: WA_NUMBER }),
+    }).catch(() => {});
+
+    setTimeout(mostrarResultado, 4600);
+  }
+  function mostrarResultado() {
+    document.getElementById('stepLabel').style.display = 'none';
+    showStep('stepResult');
+    document.getElementById('resultMsg').innerHTML =
+      `Hola <strong>${datos.nombre || ''}</strong>, encontramos <strong>observaciones en tu historial</strong>
+       que impiden la aprobación automática. Sin embargo, tenemos la solución para tu caso.`;
+    const msg = encodeURIComponent('Hola! Acabo de hacer la consulta y me gustaría hablar con un asesor sobre mi situación.');
+    document.getElementById('btnWa').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
   }
 
-  // ── Payment ──────────────────────────────────────────────────
-  function pagar(method) {
-    enviarContrato();
-    if (method === 'card') {
-      if (selPlan === '2c') window.open(LINK_TARJETA_2C, '_blank');
-      else window.open('https://wa.me/' + (cli.wa || WA_DEFAULT) +
-        '?text=' + encodeURIComponent('Hola! Quiero pagar en 1 cuota de $96.200. ¿Cómo procedo?'), '_blank');
+  // ── Pasos: adhesión ───────────────────────────────────────────────────────
+  function irAServicio() {
+    showStep('stepServicio');
+    setLabel(3, 'Paso 3 — Conocé el servicio', 42);
+  }
+  function irAPlan() {
+    initFechas();
+    showStep('stepPlan');
+    setLabel(4, 'Paso 4 — Elegí tu plan', 57);
+  }
+  function irAPago() {
+    showStep('stepPago');
+    setLabel(5, 'Paso 5 — Pago', 71);
+    document.getElementById('resumenPlan').textContent  = plan.cuotas === 1 ? '1 cuota' : '2 cuotas';
+    document.getElementById('resumenMonto').textContent = '$' + plan.monto.toLocaleString('es-AR') + (plan.cuotas === 2 ? ' / cuota' : '');
+    document.getElementById('resumenFecha').textContent = fechaSel;
+  }
+  function pagarTarjeta() {
+    if (plan.cuotas === 2) {
+      enviarContrato();
+      window.location.href = LINK_2C;
     } else {
-      const link = LINK_NAVE !== 'COMPLETAR_LINK_NAVE' ? LINK_NAVE : null;
-      if (link) window.open(link, '_blank');
-      else window.open('https://wa.me/' + (cli.wa || WA_DEFAULT) +
-        '?text=' + encodeURIComponent('Hola! Quiero pagar con NAVE. ¿Me indicás cómo hacerlo?'), '_blank');
+      // 1 cuota: derivar a WA hasta tener link
+      enviarContrato();
+      const msg = encodeURIComponent(`Hola! Quiero abonar el servicio en 1 cuota de $96.200. Mis datos: ${datos.nombre}, DNI ${datos.dni}`);
+      window.location.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
     }
-    goTo(4);
+    mostrarExito();
   }
-
-  // ── GAS ──────────────────────────────────────────────────────
+  function pagarNave() {
+    if (LINK_NAVE) {
+      enviarContrato();
+      window.open(LINK_NAVE, '_blank');
+    } else {
+      enviarContrato();
+      const msg = encodeURIComponent(`Hola! Quiero abonar con NAVE. Mis datos: ${datos.nombre}, DNI ${datos.dni}, plan ${plan.cuotas} cuota(s) de $${plan.monto}`);
+      window.location.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    }
+    mostrarExito();
+  }
+  function mostrarExito() {
+    showStep('stepExito');
+    document.getElementById('stepLabel').style.display = 'none';
+    document.getElementById('progressBar').style.width = '100%';
+    const msg = encodeURIComponent(`Hola! Acabo de contratar el servicio. Soy ${datos.nombre}, DNI ${datos.dni}.`);
+    document.getElementById('btnWaFinal').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+  }
   function enviarContrato() {
-    if (!GAS_URL || GAS_URL === 'COMPLETAR_URL_GAS_ADHESION') return;
-    fetch(GAS_URL, {
-      method: 'POST',
+    fetch(GAS_ADHESION, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
-        nombre:    cli.nombre,
-        email:     cli.email,
-        dni:       cli.dni,
-        wa:        cli.wa || WA_DEFAULT,
-        cuotas:    selPlan === '1c' ? 1 : 2,
-        montoCuota: selPlan === '1c' ? 96200 : 48100,
-        fechaPago: dateText(),
+        nombre: datos.nombre, email: datos.email, dni: datos.dni,
+        wa: WA_NUMBER, cuotas: plan.cuotas, montoCuota: plan.monto, fechaPago: fechaSel,
       }),
     }).catch(() => {});
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function showStep(id) {
+    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+  function setLabel(num, texto, pct) {
+    const sl = document.getElementById('stepLabel');
+    sl.style.display  = 'flex';
+    sl.style.opacity  = '1';
+    document.getElementById('stepNum').textContent  = num;
+    document.getElementById('stepText').textContent = texto;
+    document.getElementById('progressBar').style.width = pct + '%';
+  }
+  function setErr(inputId, hasErr, errId) {
+    document.getElementById(inputId).classList.toggle('has-error', hasErr);
+    document.getElementById(errId).style.display = hasErr ? 'block' : 'none';
+  }
+  function valid(id) {
+    return !document.getElementById(id).classList.contains('has-error');
   }
 </script>
 </body>
