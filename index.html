@@ -827,25 +827,22 @@
     actualizarResumen();
   }
   function pagarTarjeta() {
+    enviarContrato();
     if (plan.cuotas === 2) {
-      enviarContrato();
-      window.location.href = LINK_2C;
+      window.open(LINK_2C, '_blank');
     } else {
-      // 1 cuota: derivar a WA hasta tener link
-      enviarContrato();
       const msg = encodeURIComponent(`Hola! Quiero abonar el servicio en 1 cuota de $96.200. Mis datos: ${datos.nombre}, DNI ${datos.dni}`);
-      window.location.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
     }
     mostrarExito();
   }
   function pagarNave() {
+    enviarContrato();
     if (LINK_NAVE) {
-      enviarContrato();
       window.open(LINK_NAVE, '_blank');
     } else {
-      enviarContrato();
       const msg = encodeURIComponent(`Hola! Quiero abonar con NAVE. Mis datos: ${datos.nombre}, DNI ${datos.dni}, plan ${plan.cuotas} cuota(s) de $${plan.monto}`);
-      window.location.href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
     }
     mostrarExito();
   }
