@@ -241,6 +241,41 @@
       .brand-name { font-size: 17px; }
       .step-title { font-size: 17px; }
     }
+
+    /* ── MODAL T&C ── */
+    .modal-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.55); z-index: 1000;
+      align-items: flex-end; justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 20px 20px 0 0;
+      width: 100%; max-width: 500px;
+      max-height: 85vh; display: flex; flex-direction: column;
+      animation: slideUp .25s ease;
+    }
+    @keyframes slideUp { from { transform: translateY(60px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .modal-header {
+      padding: 18px 20px 14px; border-bottom: 1px solid #E5E7EB;
+      display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+    }
+    .modal-header h3 { font-size: 15px; font-weight: 700; color: #111827; }
+    .modal-close {
+      width: 30px; height: 30px; border-radius: 50%; background: #F3F4F6;
+      border: none; cursor: pointer; font-size: 16px; display: flex;
+      align-items: center; justify-content: center; color: #6B7280; flex-shrink: 0;
+    }
+    .modal-body {
+      overflow-y: auto; padding: 20px; flex: 1;
+      font-size: 12.5px; color: #374151; line-height: 1.7;
+    }
+    .modal-body h4 { font-size: 13px; font-weight: 700; color: #111827; margin: 18px 0 6px; }
+    .modal-body h4:first-child { margin-top: 0; }
+    .modal-body p  { margin-bottom: 10px; }
+    .modal-footer {
+      padding: 14px 20px; border-top: 1px solid #E5E7EB; flex-shrink: 0;
+    }
   </style>
 </head>
 <body>
@@ -474,7 +509,7 @@
       </button>
 
       <p style="font-size:10px;color:#9CA3AF;text-align:center;margin-top:12px;line-height:1.5;">
-        Al continuar aceptás nuestros <a href="#" style="color:#6B7280;text-decoration:underline;">Términos y Condiciones</a>.
+        Al continuar aceptás nuestros <a href="#" onclick="abrirTC(event)" style="color:#6B7280;text-decoration:underline;">Términos y Condiciones</a>.
         APG Global SRL · CUIT 30-71692136-7 · Adolfo Alsina 1433 p.4, CABA.
       </p>
     </div>
@@ -601,6 +636,58 @@
   </div>
 
 </div><!-- /card -->
+
+<!-- ══ MODAL TÉRMINOS Y CONDICIONES ══ -->
+<div class="modal-overlay" id="modalTC" onclick="cerrarTC(event)">
+  <div class="modal-box">
+    <div class="modal-header">
+      <h3>Términos, Condiciones y Aviso Legal</h3>
+      <button class="modal-close" onclick="document.getElementById('modalTC').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <h4>NUESTROS SERVICIOS</h4>
+      <p>El compromiso y la transparencia son pilares fundamentales para nuestra compañía, por lo que consideramos de suma importancia que nuestro cliente conozca los alcances del servicio que prestamos.</p>
+      <p>Si necesitás que se rectifique información inexacta o incorrecta y querés contratar nuestros servicios, te recomendamos leer detenidamente cómo trabajamos.</p>
+
+      <h4>¿Cómo funcionan nuestros servicios?</h4>
+      <p>Nuestra propuesta, de la mano de Gestiones APG, es brindar ayuda a nuestros clientes de todo el país para realizar la tarea administrativa de gestionar —a pedido del cliente— la rectificación, supresión y/o actualización de sus datos incorrectos o inexactos ante las bases de datos solicitadas, mediante la aplicación de la Ley de Protección de Datos Personales N° 25.326 y sus modificatorias. El valor de los honorarios se analizará en base a cada caso concreto.</p>
+      <p>Nuestro trabajo consiste en realizar las gestiones de análisis e investigación y posterior reclamo ante la base de datos correspondiente. <strong>Nuestra obligación es de medio y no de resultados.</strong> La corrección de los datos dependerá de la aceptación del reclamo por parte de la empresa titular de la base de datos.</p>
+      <p>Si bien la rectificación, supresión y/o actualización puede mejorar tu perfil comercial, no garantizamos el acceso a productos o beneficios de terceros, ya que ello depende de decisiones ajenas a nuestra empresa.</p>
+
+      <h4>¿Cómo contratás nuestros servicios?</h4>
+      <p>Completando el formulario en nuestra web y aceptando el presente Aviso Legal y los Términos y Condiciones. Un integrante de nuestro equipo se pondrá en contacto para explicarte el servicio, corroborar los datos y brindarte un presupuesto a medida.</p>
+      <p>El honorario pactado abarcará: análisis e investigación, reclamo administrativo ante la/s base/s de datos solicitada/s y acompañamiento post gestión durante 6 meses.</p>
+
+      <h4>Política de devolución</h4>
+      <p>Se procederá a la devolución cuando:<br>
+      — Por error administrativo no se haya llevado a cabo la prestación del servicio.<br>
+      — Cuando por error no se impute el pago realizado en tiempo y forma.</p>
+      <p>No se procederá a la devolución cuando:<br>
+      — No puedas acceder a un producto comercial por decisión de un tercero.<br>
+      — El reclamo ante las bases de datos no sea aceptado por no cumplir las condiciones de la Ley 25.326.<br>
+      — No nos proporciones la documentación respaldatoria solicitada.</p>
+
+      <h4>Ayudanos a mejorar</h4>
+      <p>Nos comprometemos a un trato respetuoso y esperamos el mismo de nuestros clientes. Envianos tu opinión a <strong>soycliente@gestionesapg.com</strong></p>
+
+      <h4>AVISO LEGAL</h4>
+      <p>APG Global SRL brinda ayuda a sus clientes en la gestión administrativa de rectificación, supresión y/o actualización de datos incorrectos ante las bases de datos, amparados en la Ley N° 25.326 y sus modificatorias.</p>
+      <p>La rectificación se llevará a cabo siempre que se cumplan los recaudos exigidos por la normativa vigente. APG Global SRL no tiene vínculo jurídico con las entidades crediticias.</p>
+      <p>La totalidad de la relación con nuestros clientes se realiza vía web, teléfono o en forma presencial en nuestras oficinas. <strong>APG Global NO tiene cobradores ni gestores a domicilio.</strong></p>
+
+      <h4>TÉRMINOS Y CONDICIONES</h4>
+      <p><strong>APG Global S.R.L.</strong> es propietaria de la marca Gestiones APG. Domicilio: Adolfo Alsina 1433, piso 4, b2, Ciudad Autónoma de Buenos Aires.</p>
+      <p><strong>Jurisdicción:</strong> Los presentes Términos se rigen por las leyes de la República Argentina, quedando sometidos a la jurisdicción de los Tribunales Nacionales de la Ciudad Autónoma de Buenos Aires. Consultas: <strong>soycliente@gestionesapg.com</strong></p>
+      <p><strong>Privacidad:</strong> La información que nos proporcionés será utilizada únicamente para los fines del servicio contratado. Aplicamos las medidas técnicas y organizativas requeridas por el art. 9 de la Ley 25.326 para proteger tus datos.</p>
+      <p><strong>Derecho de acceso:</strong> Podés ejercer tus derechos de acceso, cancelación y rectificación de datos contactándonos en soycliente@gestionesapg.com. La Agencia de Acceso a la Información Pública es el órgano de control de la Ley N° 25.326.</p>
+      <p><strong>Cookies:</strong> Este sitio utiliza cookies para mejorar tu experiencia. Podés eliminarlas desde la configuración de tu navegador.</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="document.getElementById('modalTC').classList.remove('open')" style="margin-top:0;">Entendido</button>
+    </div>
+  </div>
+</div>
 
 <script>
   // ── CONFIG ────────────────────────────────────────────────────────────────
@@ -788,6 +875,15 @@
   }
   function valid(id) {
     return !document.getElementById(id).classList.contains('has-error');
+  }
+
+  function abrirTC(e) {
+    e.preventDefault();
+    document.getElementById('modalTC').classList.add('open');
+  }
+  function cerrarTC(e) {
+    if (e.target === document.getElementById('modalTC'))
+      document.getElementById('modalTC').classList.remove('open');
   }
 </script>
 </body>
