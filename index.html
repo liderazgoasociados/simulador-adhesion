@@ -491,17 +491,17 @@
       <!-- Fecha -->
       <div class="step-title" style="margin-top:20px;font-size:15px;">Fecha del primer pago</div>
       <p style="font-size:13px;color:var(--muted);margin:4px 0 12px;">¿Cuándo realizás el pago?</p>
-      <div class="date-opt sel" id="dHoy"    onclick="selFecha('dHoy')">
-        <div><div class="do-label">Hoy</div><div class="do-sub" id="lblHoy"></div></div>
-        <div class="do-check sel" id="chkHoy">✓</div>
+      <div class="date-opt sel" id="dOpc1"    onclick="selFecha('dOpc1')">
+        <div><div class="do-label">Hoy</div><div class="do-sub" id="lblOpc1"></div></div>
+        <div class="do-check sel" id="chkOpc1">✓</div>
       </div>
-      <div class="date-opt" id="dManana"     onclick="selFecha('dManana')">
-        <div><div class="do-label">Mañana</div><div class="do-sub" id="lblManana"></div></div>
-        <div class="do-check" id="chkManana"></div>
+      <div class="date-opt" id="dOpc2"        onclick="selFecha('dOpc2')">
+        <div><div class="do-label">En 5 días hábiles</div><div class="do-sub" id="lblOpc2"></div></div>
+        <div class="do-check" id="chkOpc2"></div>
       </div>
-      <div class="date-opt" id="d3dias"      onclick="selFecha('d3dias')">
-        <div><div class="do-label">En 3 días hábiles</div><div class="do-sub" id="lbl3dias"></div></div>
-        <div class="do-check" id="chk3dias"></div>
+      <div class="date-opt" id="dOpc3"        onclick="selFecha('dOpc3')">
+        <div><div class="do-label">En 8 días hábiles</div><div class="do-sub" id="lblOpc3"></div></div>
+        <div class="do-check" id="chkOpc3"></div>
       </div>
 
       <hr class="divider">
@@ -554,7 +554,7 @@
       <div class="success-items">
         <div class="si"><div class="si-check">✓</div>Contrato generado y enviado por email</div>
         <div class="si"><div class="si-check">✓</div>Expediente abierto en nuestro sistema</div>
-        <div class="si"><div class="si-check">✓</div>Gestión ante Veraz iniciada</div>
+        <div class="si"><div class="si-check">✓</div>Nuestro equipo comenzó todo el trabajo de análisis e investigación</div>
         <div class="si"><div class="si-check">✓</div>Resultado esperado: 5 días hábiles</div>
       </div>
 
@@ -607,22 +607,21 @@
   }
   function initFechas() {
     const hoy = new Date();
-    document.getElementById('lblHoy').textContent    = fmtFecha(hoy);
-    document.getElementById('lblManana').textContent = fmtFecha(addDias(hoy, 1));
-    document.getElementById('lbl3dias').textContent  = fmtFecha(addHabiles(hoy, 3));
+    document.getElementById('lblOpc1').textContent = fmtFecha(hoy);
+    document.getElementById('lblOpc2').textContent = fmtFecha(addHabiles(hoy, 5));
+    document.getElementById('lblOpc3').textContent = fmtFecha(addHabiles(hoy, 8));
     fechaSel = fmtFecha(hoy);
   }
   function selFecha(id) {
-    ['dHoy','dManana','d3dias'].forEach(x => {
+    ['dOpc1','dOpc2','dOpc3'].forEach(x => {
       document.getElementById(x).classList.remove('sel');
-      const chk = document.getElementById('chk' + x.charAt(0).toUpperCase() + x.slice(1));
+      const chk = document.getElementById('chk' + x.slice(1));
       if (chk) { chk.classList.remove('sel'); chk.textContent = ''; }
     });
     document.getElementById(id).classList.add('sel');
-    const chkId = 'chk' + id.charAt(0).toUpperCase() + id.slice(1);
-    const chk = document.getElementById(chkId);
+    const chk = document.getElementById('chk' + id.slice(1));
     if (chk) { chk.classList.add('sel'); chk.textContent = '✓'; }
-    fechaSel = document.getElementById('lbl' + id.charAt(0).toUpperCase() + id.slice(1)).textContent;
+    fechaSel = document.getElementById('lbl' + id.slice(1)).textContent;
   }
   function selPlan(cuotas, monto) {
     plan = { cuotas, monto };
