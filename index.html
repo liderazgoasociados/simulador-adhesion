@@ -740,11 +740,21 @@
     const chk = document.getElementById('chk' + id.slice(1));
     if (chk) { chk.classList.add('sel'); chk.textContent = '✓'; }
     fechaSel = document.getElementById('lbl' + id.slice(1)).textContent;
+    actualizarResumen();
   }
   function selPlan(cuotas, monto) {
     plan = { cuotas, monto };
     document.getElementById('plan2c').classList.toggle('sel', cuotas === 2);
     document.getElementById('plan1c').classList.toggle('sel', cuotas === 1);
+    actualizarResumen();
+  }
+  function actualizarResumen() {
+    const rPlan  = document.getElementById('resumenPlan');
+    const rMonto = document.getElementById('resumenMonto');
+    const rFecha = document.getElementById('resumenFecha');
+    if (rPlan)  rPlan.textContent  = plan.cuotas === 1 ? '1 pago' : '2 cuotas sin interés';
+    if (rMonto) rMonto.textContent = '$' + plan.monto.toLocaleString('es-AR') + (plan.cuotas === 2 ? ' / cuota' : ' único pago');
+    if (rFecha) rFecha.textContent = fechaSel;
   }
 
   // ── Pasos: simulador ──────────────────────────────────────────────────────
@@ -810,11 +820,10 @@
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
   }
   function irAPago() {
+    initFechas();
     showStep('stepPago');
     setLabel(5, 'Paso 5 — Pago', 71);
-    document.getElementById('resumenPlan').textContent  = plan.cuotas === 1 ? '1 cuota' : '2 cuotas';
-    document.getElementById('resumenMonto').textContent = '$' + plan.monto.toLocaleString('es-AR') + (plan.cuotas === 2 ? ' / cuota' : '');
-    document.getElementById('resumenFecha').textContent = fechaSel;
+    actualizarResumen();
   }
   function pagarTarjeta() {
     if (plan.cuotas === 2) {
