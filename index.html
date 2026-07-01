@@ -809,6 +809,7 @@
     datos.nombre   = nombre;
     datos.telefono = telefono;
     datos.email    = email;
+    trackFunnel('1_datos');
     showStep('step2');
     setLabel(2, 'Paso 2 — Verificación crediticia', 28);
   }
@@ -831,15 +832,11 @@
       }, i * 900 + 400);
     });
 
-    fetch(GAS_SIMULADOR, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ ...datos, waNumero: WA_NUMBER }),
-    }).catch(() => {});
-
+    trackFunnel('2_dni');
     setTimeout(mostrarResultado, 4600);
   }
   function mostrarResultado() {
+    trackFunnel('3_resultado');
     document.getElementById('stepLabel').style.display = 'none';
     showStep('stepResult');
     document.getElementById('resultMsg').innerHTML =
@@ -851,6 +848,7 @@
 
   // ── Pasos: adhesión ───────────────────────────────────────────────────────
   function irAServicio() {
+    trackFunnel('4_servicio');
     showStep('stepServicio');
     setLabel(3, 'Paso 3 — Conocé el servicio', 42);
   }
@@ -860,16 +858,19 @@
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
   }
   function irAPago() {
+    trackFunnel('5_confirmacion');
     showStep('stepPago');
     setLabel(5, 'Paso 5 — Elegí cómo abonar', 71);
   }
   function irAFecha() {
     initFechas();
+    trackFunnel('6_fecha');
     showStep('stepFecha');
     setLabel(6, 'Paso 6 — Fecha y pago', 85);
     actualizarResumen();
   }
   function pagarTarjeta() {
+    datos.metodoPago = 'Tarjeta';
     enviarContrato();
     if (plan.cuotas === 2) {
       window.open(LINK_2C, '_blank');
@@ -907,6 +908,7 @@
     });
   }
   function confirmarCBU() {
+    datos.metodoPago = 'Transferencia CBU';
     enviarContrato();
     const montoStr = plan.cuotas === 2
       ? `1° cuota de $${plan.monto.toLocaleString('es-AR')}`
@@ -927,8 +929,22 @@
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
+        action: 'contrato',
         nombre: datos.nombre, email: datos.email, dni: datos.dni,
-        wa: WA_NUMBER, cuotas: plan.cuotas, montoCuota: plan.monto, fechaPago: fechaSel,
+        wa: WA_NUMBER, cuotas: plan.cuotas, montoCuota: plan.monto,
+        fechaPago: fechaSel, metodoPago: datos.metodoPago || '',
+      }),
+    }).catch(() => {});
+  }
+  function trackFunnel(paso) {
+    fetch(GAS_ADHESION, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'track', paso,
+        nombre: datos.nombre || '', email: datos.email || '',
+        dni: datos.dni || '', wa: datos.telefono || WA_NUMBER,
+        cuotas: plan.cuotas, montoCuota: plan.monto, fechaPago: fechaSel,
       }),
     }).catch(() => {});
   }
