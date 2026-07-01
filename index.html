@@ -446,51 +446,8 @@
         </div>
       </div>
 
-      <!-- Divisor -->
-      <hr class="divider">
-
-      <!-- Planes -->
-      <div class="step-title" style="font-size:15px;margin-bottom:4px;">Elegí cómo abonar</div>
-      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Valor total del servicio: <strong>$96.000 IVA incluido</strong></p>
-
-      <div class="plan sel" id="plan2c" onclick="selPlan(2, 48100)">
-        <div class="plan-badge">Más elegido</div>
-        <div class="plan-title">2 cuotas sin interés</div>
-        <div class="plan-price">$48.100 <span>/ cuota</span></div>
-        <div class="plan-desc">Total $96.200 · Comenzás pagando la primera cuota</div>
-      </div>
-
-      <div class="plan" id="plan1c" onclick="selPlan(1, 96200)">
-        <div class="plan-title">1 pago</div>
-        <div class="plan-price">$96.200 <span>único pago</span></div>
-        <div class="plan-desc">Pago total de contado</div>
-      </div>
-
-      <!-- Fecha -->
-      <div class="step-title" style="margin-top:20px;font-size:15px;">Fecha del primer pago</div>
-      <p style="font-size:13px;color:var(--muted);margin:4px 0 12px;">¿Cuándo realizás el pago?</p>
-
-      <div class="date-opt sel" id="dHoy"    onclick="selFecha('dHoy')">
-        <div><div class="do-label">Hoy</div><div class="do-sub" id="lblHoy"></div></div>
-        <div class="do-check sel" id="chkHoy">✓</div>
-      </div>
-      <div class="date-opt" id="dManana"     onclick="selFecha('dManana')">
-        <div><div class="do-label">Mañana</div><div class="do-sub" id="lblManana"></div></div>
-        <div class="do-check" id="chkManana"></div>
-      </div>
-      <div class="date-opt" id="d3dias"      onclick="selFecha('d3dias')">
-        <div><div class="do-label">En 3 días hábiles</div><div class="do-sub" id="lbl3dias"></div></div>
-        <div class="do-check" id="chk3dias"></div>
-      </div>
-
       <button class="btn btn-primary" onclick="irAPago()" style="margin-top:16px;">Contratar →</button>
       <button class="btn btn-ghost"   onclick="irAServicio()">← Volver</button>
-
-      <p style="font-size:10px;color:#9CA3AF;text-align:center;margin-top:14px;line-height:1.5;">
-        Al continuar aceptás nuestros
-        <a href="#" style="color:#6B7280;text-decoration:underline;">Términos y Condiciones</a>.
-        APG Global SRL · CUIT 30-71692136-7 · Adolfo Alsina 1433 p.4, CABA.
-      </p>
     </div>
   </div>
 
@@ -512,6 +469,40 @@
         <div class="si"><div class="si-check">✓</div>Expediente abierto en nuestro sistema</div>
         <div class="si"><div class="si-check">✓</div>Equipo asignado a tu caso</div>
         <div class="si"><div class="si-check">✓</div>Resultado esperado: 5 días hábiles</div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Planes -->
+      <div class="step-title" style="font-size:15px;margin-bottom:4px;">Elegí cómo abonar</div>
+      <p style="font-size:12px;color:var(--muted);margin-bottom:12px;">Valor total del servicio: <strong>$96.000 IVA incluido</strong></p>
+
+      <div class="plan sel" id="plan2c" onclick="selPlan(2, 48100)">
+        <div class="plan-badge">Más elegido</div>
+        <div class="plan-title">2 cuotas sin interés</div>
+        <div class="plan-price">$48.100 <span>/ cuota</span></div>
+        <div class="plan-desc">Total $96.200 · Comenzás pagando la primera cuota</div>
+      </div>
+      <div class="plan" id="plan1c" onclick="selPlan(1, 96200)">
+        <div class="plan-title">1 pago</div>
+        <div class="plan-price">$96.200 <span>único pago</span></div>
+        <div class="plan-desc">Pago total de contado</div>
+      </div>
+
+      <!-- Fecha -->
+      <div class="step-title" style="margin-top:20px;font-size:15px;">Fecha del primer pago</div>
+      <p style="font-size:13px;color:var(--muted);margin:4px 0 12px;">¿Cuándo realizás el pago?</p>
+      <div class="date-opt sel" id="dHoy"    onclick="selFecha('dHoy')">
+        <div><div class="do-label">Hoy</div><div class="do-sub" id="lblHoy"></div></div>
+        <div class="do-check sel" id="chkHoy">✓</div>
+      </div>
+      <div class="date-opt" id="dManana"     onclick="selFecha('dManana')">
+        <div><div class="do-label">Mañana</div><div class="do-sub" id="lblManana"></div></div>
+        <div class="do-check" id="chkManana"></div>
+      </div>
+      <div class="date-opt" id="d3dias"      onclick="selFecha('d3dias')">
+        <div><div class="do-label">En 3 días hábiles</div><div class="do-sub" id="lbl3dias"></div></div>
+        <div class="do-check" id="chk3dias"></div>
       </div>
 
       <hr class="divider">
