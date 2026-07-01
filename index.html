@@ -483,7 +483,7 @@
         <div class="do-check" id="chk3dias"></div>
       </div>
 
-      <button class="btn btn-primary" onclick="irAPago()" style="margin-top:16px;">Confirmar y ver opciones de pago →</button>
+      <button class="btn btn-primary" onclick="irAPago()" style="margin-top:16px;">Contratar →</button>
       <button class="btn btn-ghost"   onclick="irAServicio()">← Volver</button>
 
       <p style="font-size:10px;color:#9CA3AF;text-align:center;margin-top:14px;line-height:1.5;">
@@ -497,15 +497,34 @@
   <!-- ══ PAGO ══ -->
   <div id="stepPago" class="step">
     <div class="card-body">
-      <div class="step-title">Resumen y pago</div>
 
-      <div class="sum-box">
-        <div class="sum-row"><span class="sl">Servicio</span><span class="sv">Gestión ante Veraz</span></div>
-        <div class="sum-row"><span class="sl">Plan</span>   <span class="sv" id="resumenPlan"></span></div>
-        <div class="sum-row"><span class="sl">Monto</span>  <span class="sv" id="resumenMonto"></span></div>
-        <div class="sum-row"><span class="sl">Fecha pago</span><span class="sv" id="resumenFecha"></span></div>
+      <!-- Confirmación -->
+      <div style="text-align:center;margin-bottom:20px;">
+        <div class="success-icon" style="margin-bottom:12px;">✅</div>
+        <div class="success-title">¡Ya estamos trabajando en tu caso!</div>
+        <p style="font-size:13px;color:var(--muted);margin-top:6px;line-height:1.5;">
+          Tu expediente fue generado. <strong>Solo falta completar el pago</strong> para que nuestro equipo inicie la gestión.
+        </p>
       </div>
 
+      <div class="success-items" style="margin-bottom:20px;">
+        <div class="si"><div class="si-check">✓</div>Contrato generado y listo para enviarte</div>
+        <div class="si"><div class="si-check">✓</div>Expediente abierto en nuestro sistema</div>
+        <div class="si"><div class="si-check">✓</div>Equipo asignado a tu caso</div>
+        <div class="si"><div class="si-check">✓</div>Resultado esperado: 5 días hábiles</div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Resumen -->
+      <div class="sum-box">
+        <div class="sum-row"><span class="sl">Servicio</span>   <span class="sv">Gestión ante Veraz</span></div>
+        <div class="sum-row"><span class="sl">Plan</span>       <span class="sv" id="resumenPlan"></span></div>
+        <div class="sum-row"><span class="sl">Monto</span>      <span class="sv" id="resumenMonto"></span></div>
+        <div class="sum-row"><span class="sl">Fecha pago</span> <span class="sv" id="resumenFecha"></span></div>
+      </div>
+
+      <!-- Trust -->
       <div class="trust-row">
         <div class="ti"><div class="ti-icon">🔒</div><div class="ti-label">Pago<br>Seguro</div></div>
         <div class="ti"><div class="ti-icon">🛡️</div><div class="ti-label">Datos<br>Protegidos</div></div>
