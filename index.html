@@ -555,25 +555,31 @@
         <div class="plan-desc">Pago total de contado</div>
       </div>
 
-      <!-- Fecha -->
-      <div class="step-title" style="margin-top:20px;font-size:15px;">Fecha del primer pago</div>
-      <p style="font-size:13px;color:var(--muted);margin:4px 0 12px;">¿Cuándo realizás el pago?</p>
-      <div class="date-opt sel" id="dOpc1"    onclick="selFecha('dOpc1')">
+      <button class="btn btn-primary" onclick="irAFecha()" style="margin-top:20px;">Continuar →</button>
+    </div>
+  </div>
+
+  <!-- ══ FECHA Y PAGO ══ -->
+  <div id="stepFecha" class="step">
+    <div class="card-body">
+      <div class="step-title" style="font-size:16px;">¿Cuándo realizás el pago?</div>
+      <p style="font-size:13px;color:var(--muted);margin:4px 0 14px;">Seleccioná la fecha del primer pago.</p>
+
+      <div class="date-opt sel" id="dOpc1" onclick="selFecha('dOpc1')">
         <div><div class="do-label">Hoy</div><div class="do-sub" id="lblOpc1"></div></div>
         <div class="do-check sel" id="chkOpc1">✓</div>
       </div>
-      <div class="date-opt" id="dOpc2"        onclick="selFecha('dOpc2')">
+      <div class="date-opt" id="dOpc2"    onclick="selFecha('dOpc2')">
         <div><div class="do-label">En 5 días hábiles</div><div class="do-sub" id="lblOpc2"></div></div>
         <div class="do-check" id="chkOpc2"></div>
       </div>
-      <div class="date-opt" id="dOpc3"        onclick="selFecha('dOpc3')">
+      <div class="date-opt" id="dOpc3"    onclick="selFecha('dOpc3')">
         <div><div class="do-label">En 8 días hábiles</div><div class="do-sub" id="lblOpc3"></div></div>
         <div class="do-check" id="chkOpc3"></div>
       </div>
 
       <hr class="divider">
 
-      <!-- Resumen -->
       <div class="sum-box">
         <div class="sum-row"><span class="sl">Servicio</span>   <span class="sv">Gestión ante Veraz</span></div>
         <div class="sum-row"><span class="sl">Plan</span>       <span class="sv" id="resumenPlan"></span></div>
@@ -581,7 +587,6 @@
         <div class="sum-row"><span class="sl">Fecha pago</span> <span class="sv" id="resumenFecha"></span></div>
       </div>
 
-      <!-- Trust -->
       <div class="trust-row">
         <div class="ti"><div class="ti-icon">🔒</div><div class="ti-label">Pago<br>Seguro</div></div>
         <div class="ti"><div class="ti-icon">🛡️</div><div class="ti-label">Datos<br>Protegidos</div></div>
@@ -599,14 +604,12 @@
         <span class="logo mp">Mercado Pago</span>
       </div>
 
-      <button class="btn btn-primary" id="btnPagoTarjeta" onclick="pagarTarjeta()" style="margin-top:16px;margin-bottom:8px;">
+      <button class="btn btn-primary" onclick="pagarTarjeta()" style="margin-top:16px;margin-bottom:8px;">
         💳 Pagar con tarjeta de crédito
       </button>
-      <button class="btn btn-yellow" id="btnPagoNave" onclick="pagarNave()">
+      <button class="btn btn-yellow" onclick="pagarNave()">
         🟡 Pagar con NAVE
       </button>
-
-      <button class="btn btn-ghost" onclick="irAPlan()">← Volver</button>
       <p class="disclaimer" style="margin-top:12px;">Al confirmar el pago recibís tu contrato por email automáticamente.</p>
     </div>
   </div>
@@ -821,9 +824,13 @@
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
   }
   function irAPago() {
-    initFechas();
     showStep('stepPago');
-    setLabel(5, 'Paso 5 — Pago', 71);
+    setLabel(5, 'Paso 5 — Elegí cómo abonar', 71);
+  }
+  function irAFecha() {
+    initFechas();
+    showStep('stepFecha');
+    setLabel(6, 'Paso 6 — Fecha y pago', 85);
     actualizarResumen();
   }
   function pagarTarjeta() {
