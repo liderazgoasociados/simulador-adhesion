@@ -104,6 +104,8 @@
     }
     .btn-wa:hover { opacity: .9; }
     .disclaimer { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.5; }
+    .btn-copy { background:#2563eb;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s; }
+    .btn-copy.ok { background:#16a34a; }
 
     /* ── LOADING ── */
     #stepLoading .card-body { padding: 44px 24px; text-align: center; }
@@ -607,9 +609,46 @@
       <button class="btn btn-primary" onclick="pagarTarjeta()" style="margin-top:16px;margin-bottom:8px;">
         💳 Pagar con tarjeta de crédito
       </button>
-      <button class="btn btn-yellow" onclick="pagarNave()">
+      <button class="btn btn-yellow" onclick="pagarNave()" style="margin-bottom:8px;">
         🟡 Pagar con NAVE
       </button>
+      <button class="btn" onclick="mostrarCBU()" style="background:#1a3c5e;color:#fff;margin-bottom:0;">
+        🏦 Transferencia bancaria (CBU)
+      </button>
+
+      <!-- Panel CBU -->
+      <div id="panelCBU" style="display:none;margin-top:16px;background:#f0f7ff;border:1.5px solid #2563eb33;border-radius:12px;padding:16px;">
+        <div style="font-weight:700;font-size:14px;color:#1a3c5e;margin-bottom:12px;">📋 Datos para la transferencia</div>
+
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;color:#64748b;margin-bottom:3px;">CBU</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="txtCBU" style="font-family:monospace;font-size:14px;font-weight:600;letter-spacing:1px;color:#0f172a;">0070153820000005596391</span>
+            <button onclick="copiar('txtCBU','btnCopCBU')" id="btnCopCBU" class="btn-copy">Copiar</button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+          <div style="font-size:11px;color:#64748b;margin-bottom:3px;">Alias</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span id="txtAlias" style="font-size:14px;font-weight:600;color:#0f172a;">APG.GLOBAL</span>
+            <button onclick="copiar('txtAlias','btnCopAlias')" id="btnCopAlias" class="btn-copy">Copiar</button>
+          </div>
+        </div>
+
+        <div style="font-size:12px;color:#475569;line-height:1.8;border-top:1px solid #cbd5e133;padding-top:10px;margin-top:4px;">
+          <div><strong>Nº de cuenta:</strong> 0005596-3 153-9</div>
+          <div><strong>CUIT:</strong> 30-71692136-7</div>
+          <div><strong>Razón Social:</strong> APG GLOBAL S.R.L.</div>
+          <div style="margin-top:6px;"><strong>Monto:</strong> <span id="cbuMonto" style="color:#16a34a;font-weight:700;"></span></div>
+        </div>
+
+        <button onclick="confirmarCBU()" style="margin-top:14px;width:100%;padding:13px;background:#25D366;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;">
+          ✅ Ya transferí → Confirmar por WhatsApp
+        </button>
+        <p style="font-size:11px;color:#64748b;text-align:center;margin:8px 0 0;">Enviá el comprobante por WhatsApp para activar tu gestión</p>
+      </div>
+
       <p class="disclaimer" style="margin-top:12px;">Al confirmar el pago recibís tu contrato por email automáticamente.</p>
     </div>
   </div>
@@ -851,6 +890,32 @@
       const msg = encodeURIComponent(`Hola! Quiero abonar con NAVE. Mis datos: ${datos.nombre}, DNI ${datos.dni}, plan ${plan.cuotas} cuota(s) de $${plan.monto}`);
       window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
     }
+    mostrarExito();
+  }
+  function mostrarCBU() {
+    document.getElementById('panelCBU').style.display = 'block';
+    const montoStr = plan.cuotas === 2
+      ? `$${plan.monto.toLocaleString('es-AR')} (1° cuota)`
+      : `$${plan.monto.toLocaleString('es-AR')} (pago único)`;
+    document.getElementById('cbuMonto').textContent = montoStr;
+    document.getElementById('panelCBU').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function copiar(spanId, btnId) {
+    const text = document.getElementById(spanId).textContent.trim();
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById(btnId);
+      btn.textContent = '¡Copiado!';
+      btn.classList.add('ok');
+      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('ok'); }, 2000);
+    });
+  }
+  function confirmarCBU() {
+    enviarContrato();
+    const montoStr = plan.cuotas === 2
+      ? `1° cuota de $${plan.monto.toLocaleString('es-AR')}`
+      : `pago único de $${plan.monto.toLocaleString('es-AR')}`;
+    const msg = encodeURIComponent(`Hola! Realicé la transferencia para contratar el servicio.\nNombre: ${datos.nombre}\nDNI: ${datos.dni}\nMonto: ${montoStr}\nFecha pago: ${fechaSel}\n\nAdjunto el comprobante.`);
+    window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
     mostrarExito();
   }
   function mostrarExito() {
