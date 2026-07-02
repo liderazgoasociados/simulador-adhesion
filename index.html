@@ -742,6 +742,18 @@
   const WA_NUMBER = params.get('wa') || WA_DEFAULT;
 
   let datos   = { nombre: '', email: '', telefono: '', dni: '' };
+
+  // ── Modo skip: arranca directo en el resultado ────────────────────────────
+  if (params.get('skip') === '1') {
+    datos.nombre   = decodeURIComponent(params.get('nombre') || '');
+    datos.telefono = params.get('tel')   || '';
+    datos.email    = decodeURIComponent(params.get('email') || '');
+    datos.dni      = params.get('dni')   || '';
+    document.addEventListener('DOMContentLoaded', () => {
+      mostrarResultado();
+      trackFunnel('3_resultado');
+    });
+  }
   let plan    = { cuotas: 2, monto: 48100 };
   let fechaSel = '';
 
