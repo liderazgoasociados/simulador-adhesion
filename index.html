@@ -742,15 +742,19 @@
   const WA_NUMBER = params.get('wa') || WA_DEFAULT;
 
   let datos   = { nombre: '', email: '', telefono: '', dni: '' };
+  let viaSkip = false;
 
-  // ── Modo skip: arranca directo en el resultado ────────────────────────────
+  // Modo skip: muestra el step de servicio SIN trackear al cargar
+  // El tracking '4_servicio' se dispara recién cuando el cliente hace clic en "Quiero avanzar"
   if (params.get('skip') === '1') {
     datos.nombre   = decodeURIComponent(params.get('nombre') || '');
     datos.telefono = params.get('tel')   || '';
     datos.email    = decodeURIComponent(params.get('email') || '');
     datos.dni      = params.get('dni')   || '';
+    viaSkip = true;
     document.addEventListener('DOMContentLoaded', () => {
-      irAServicio();
+      showStep('stepServicio');
+      setLabel(3, 'Paso 3 — Conocé el servicio', 42);
     });
   }
   let plan    = { cuotas: 2, monto: 48100 };
@@ -864,6 +868,7 @@
     setLabel(3, 'Paso 3 — Conocé el servicio', 42);
   }
   function irAPlan() {
+    if (viaSkip) { trackFunnel('4_servicio'); viaSkip = false; }
     initFechas();
     showStep('stepPlan');
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
