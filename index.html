@@ -750,8 +750,7 @@
     datos.email    = decodeURIComponent(params.get('email') || '');
     datos.dni      = params.get('dni')   || '';
     document.addEventListener('DOMContentLoaded', () => {
-      mostrarResultado();
-      trackFunnel('3_resultado');
+      irAServicio();
     });
   }
   let plan    = { cuotas: 2, monto: 48100 };
