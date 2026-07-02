@@ -931,7 +931,8 @@
       body: JSON.stringify({
         action: 'contrato',
         nombre: datos.nombre, email: datos.email, dni: datos.dni,
-        wa: WA_NUMBER, cuotas: plan.cuotas, montoCuota: plan.monto,
+        wa: datos.telefono || '', waOperador: WA_NUMBER,
+        cuotas: plan.cuotas, montoCuota: plan.monto,
         fechaPago: fechaSel, metodoPago: datos.metodoPago || '',
       }),
     }).catch(() => {});
@@ -943,7 +944,8 @@
       body: JSON.stringify({
         action: 'track', paso,
         nombre: datos.nombre || '', email: datos.email || '',
-        dni: datos.dni || '', wa: datos.telefono || WA_NUMBER,
+        dni: datos.dni || '', wa: datos.telefono || '',
+        waOperador: WA_NUMBER,
         cuotas: plan.cuotas, montoCuota: plan.monto, fechaPago: fechaSel,
       }),
     }).catch(() => {});
