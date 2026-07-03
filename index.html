@@ -655,7 +655,15 @@
     <div class="card-body">
       <div class="success-icon">✅</div>
       <div class="success-title">¡Ya estamos trabajando en tu caso!</div>
-      <div class="success-sub">Tu contrato fue enviado a tu email. Guardalo como comprobante.</div>
+      <div id="successSub" class="success-sub">Tu contrato fue enviado a tu email. Guardalo como comprobante.</div>
+
+      <div id="panelEmailContrato" style="display:none;margin-top:16px;background:#EEF2FF;border-radius:10px;padding:16px;text-align:left;">
+        <p style="font-size:13px;color:#0D1B6E;font-weight:600;margin-bottom:10px;">¿Querés recibir tu contrato por email?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="email" id="emailContrato" placeholder="tu@email.com" style="flex:1;min-width:180px;padding:10px 14px;border:1.5px solid #c7d2fe;border-radius:8px;font-size:14px;outline:none;">
+          <button id="btnEnviarContrato" onclick="enviarContratoCapturado()" style="padding:10px 18px;background:#0D1B6E;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">Enviar contrato</button>
+        </div>
+      </div>
 
       <div class="success-items">
         <div class="si"><div class="si-check">✓</div>Contrato generado y enviado por email</div>
@@ -895,16 +903,6 @@
     }
     mostrarExito();
   }
-  function pagarNave() {
-    enviarContrato();
-    if (LINK_NAVE) {
-      window.open(LINK_NAVE, '_blank');
-    } else {
-      const msg = encodeURIComponent(`Hola! Quiero abonar con NAVE. Mis datos: ${datos.nombre}, DNI ${datos.dni}, plan ${plan.cuotas} cuota(s) de $${plan.monto}`);
-      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
-    }
-    mostrarExito();
-  }
   function mostrarCBU() {
     document.getElementById('panelCBU').style.display = 'block';
     const montoStr = plan.cuotas === 2
@@ -932,12 +930,36 @@
     window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
     mostrarExito();
   }
+  function emailEsValido(e) {
+    return e && e.trim() && e.toLowerCase() !== 'xxx@xxx.com' && !e.startsWith('xxx@') && e.includes('@');
+  }
   function mostrarExito() {
     showStep('stepExito');
     document.getElementById('stepLabel').style.display = 'none';
     document.getElementById('progressBar').style.width = '100%';
     const msg = encodeURIComponent(`Hola! Acabo de contratar el servicio. Soy ${datos.nombre}, DNI ${datos.dni}.`);
     document.getElementById('btnWaFinal').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+    if (emailEsValido(datos.email)) {
+      document.getElementById('successSub').textContent = 'Tu contrato fue enviado a ' + datos.email + '. Guardalo como comprobante.';
+      document.getElementById('panelEmailContrato').style.display = 'none';
+    } else {
+      document.getElementById('successSub').textContent = 'Ingresá tu email para recibir tu contrato.';
+      document.getElementById('panelEmailContrato').style.display = 'block';
+    }
+  }
+  function enviarContratoCapturado() {
+    const emailInput = document.getElementById('emailContrato').value.trim();
+    if (!emailEsValido(emailInput)) {
+      alert('Ingresá un email válido para recibir tu contrato.');
+      return;
+    }
+    datos.email = emailInput;
+    enviarContrato();
+    document.getElementById('panelEmailContrato').style.display = 'none';
+    document.getElementById('successSub').textContent = 'Tu contrato fue enviado a ' + emailInput + '. Guardalo como comprobante.';
+    const btn = document.getElementById('btnEnviarContrato');
+    btn.textContent = '✅ Enviado';
+    btn.disabled = true;
   }
   function enviarContrato() {
     fetch(GAS_ADHESION, {
