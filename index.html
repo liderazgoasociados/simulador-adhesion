@@ -736,7 +736,7 @@
   const GAS_ADHESION  = 'https://script.google.com/macros/s/AKfycbwggkZ5VJg11wgwuuqw5YrsdFOTGbYcIovd2ty38c_ohZWn-BnKTdoe2LUrJ6MrS2DEmg/exec';
   const WA_DEFAULT    = '5491121847227';
   const LINK_2C       = 'https://gestionesapg.com/48100-2/';
-  const LINK_NAVE     = 'https://gestionesapg.com/96200-2/';
+  const LINK_1C       = 'https://gestionesapg.com/96200-2/';
 
   const params    = new URLSearchParams(window.location.search);
   const WA_NUMBER = params.get('wa') || WA_DEFAULT;
@@ -891,8 +891,7 @@
     if (plan.cuotas === 2) {
       window.open(LINK_2C, '_blank');
     } else {
-      const msg = encodeURIComponent(`Hola! Quiero abonar el servicio en 1 cuota de $96.200. Mis datos: ${datos.nombre}, DNI ${datos.dni}`);
-      window.open(`https://wa.me/${WA_NUMBER}?text=${msg}`, '_blank');
+      window.open(LINK_1C, '_blank');
     }
     mostrarExito();
   }
