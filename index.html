@@ -891,23 +891,6 @@
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
   }
   function irAPago() {
-    if (!emailEsValido(datos.email)) {
-      document.getElementById('panelEmailPlan').style.display = 'block';
-      document.getElementById('btnContratar').style.display = 'none';
-      document.getElementById('emailPlan').focus();
-      return;
-    }
-    _procederAPago();
-  }
-  function confirmarEmailPlan() {
-    const v = document.getElementById('emailPlan').value.trim();
-    if (!emailEsValido(v)) { alert('Ingresá un email válido para recibir tu contrato.'); return; }
-    datos.email = v;
-    document.getElementById('panelEmailPlan').style.display = 'none';
-    document.getElementById('btnContratar').style.display = 'block';
-    _procederAPago();
-  }
-  function _procederAPago() {
     trackFunnel('5_confirmacion');
     enviarContrato();
     showStep('stepPago');
