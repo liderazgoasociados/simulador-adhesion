@@ -883,6 +883,7 @@
   }
   function irAPago() {
     trackFunnel('5_confirmacion');
+    enviarContrato();
     showStep('stepPago');
     setLabel(5, 'Paso 5 — Elegí cómo abonar', 71);
   }
@@ -893,9 +894,22 @@
     setLabel(6, 'Paso 6 — Fecha y pago', 85);
     actualizarResumen();
   }
+  function trackPago(metodo) {
+    fetch(GAS_ADHESION, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({
+        action: 'track', paso: '7_pago',
+        wa: datos.telefono || '', waOperador: WA_NUMBER,
+        nombre: datos.nombre, email: datos.email, dni: datos.dni,
+        cuotas: plan.cuotas, montoCuota: plan.monto,
+        fechaPago: fechaSel, metodoPago: metodo,
+      }),
+    }).then(r => r.json()).catch(() => {});
+  }
   function pagarTarjeta() {
     datos.metodoPago = 'Tarjeta';
-    enviarContrato();
+    trackPago('Tarjeta');
     if (plan.cuotas === 2) {
       window.open(LINK_2C, '_blank');
     } else {
@@ -922,7 +936,7 @@
   }
   function confirmarCBU() {
     datos.metodoPago = 'Transferencia CBU';
-    enviarContrato();
+    trackPago('Transferencia CBU');
     const montoStr = plan.cuotas === 2
       ? `1° cuota de $${plan.monto.toLocaleString('es-AR')}`
       : `pago único de $${plan.monto.toLocaleString('es-AR')}`;
