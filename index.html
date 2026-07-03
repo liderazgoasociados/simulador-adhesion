@@ -507,7 +507,16 @@
         </div>
       </div>
 
-      <button class="btn btn-primary" onclick="irAPago()" style="font-size:16px;padding:16px;">
+      <!-- campo email — solo aparece en skip link sin email -->
+      <div id="panelEmailPlan" style="display:none;background:#EEF2FF;border-radius:12px;padding:16px;margin-bottom:16px;">
+        <p style="font-size:13px;color:#0D1B6E;font-weight:600;margin-bottom:10px;">📧 ¿A qué email enviamos tu contrato?</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <input type="email" id="emailPlan" placeholder="tu@email.com" style="flex:1;min-width:180px;padding:10px 14px;border:1.5px solid #c7d2fe;border-radius:8px;font-size:14px;outline:none;">
+          <button onclick="confirmarEmailPlan()" style="padding:10px 18px;background:#0D1B6E;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;">Continuar →</button>
+        </div>
+      </div>
+
+      <button id="btnContratar" class="btn btn-primary" onclick="irAPago()" style="font-size:16px;padding:16px;">
         Contratar ahora →
       </button>
 
@@ -882,6 +891,23 @@
     setLabel(4, 'Paso 4 — Elegí tu plan', 57);
   }
   function irAPago() {
+    if (!emailEsValido(datos.email)) {
+      document.getElementById('panelEmailPlan').style.display = 'block';
+      document.getElementById('btnContratar').style.display = 'none';
+      document.getElementById('emailPlan').focus();
+      return;
+    }
+    _procederAPago();
+  }
+  function confirmarEmailPlan() {
+    const v = document.getElementById('emailPlan').value.trim();
+    if (!emailEsValido(v)) { alert('Ingresá un email válido para recibir tu contrato.'); return; }
+    datos.email = v;
+    document.getElementById('panelEmailPlan').style.display = 'none';
+    document.getElementById('btnContratar').style.display = 'block';
+    _procederAPago();
+  }
+  function _procederAPago() {
     trackFunnel('5_confirmacion');
     enviarContrato();
     showStep('stepPago');
