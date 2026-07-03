@@ -896,7 +896,7 @@
   }
   function trackPago(metodo) {
     fetch(GAS_ADHESION, {
-      method: 'POST',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action: 'track', paso: '7_pago',
@@ -977,7 +977,7 @@
   }
   function enviarContrato() {
     fetch(GAS_ADHESION, {
-      method: 'POST',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
         action: 'contrato',
@@ -986,10 +986,7 @@
         cuotas: plan.cuotas, montoCuota: plan.monto,
         fechaPago: fechaSel, metodoPago: datos.metodoPago || '',
       }),
-    })
-    .then(r => r.json())
-    .then(d => { if (!d.ok) console.error('[Contrato] GAS error:', d.error); })
-    .catch(err => console.error('[Contrato] fetch error:', err.message));
+    }).catch(() => {});
   }
   function trackFunnel(paso) {
     fetch(GAS_ADHESION, {
