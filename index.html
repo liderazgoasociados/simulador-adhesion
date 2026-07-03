@@ -892,7 +892,6 @@
   }
   function irAPago() {
     trackFunnel('5_confirmacion');
-    enviarContrato();
     showStep('stepPago');
     setLabel(5, 'Paso 5 — Elegí cómo abonar', 71);
   }
@@ -918,7 +917,7 @@
   }
   function pagarTarjeta() {
     datos.metodoPago = 'Tarjeta';
-    trackPago('Tarjeta');
+    enviarContrato();
     if (plan.cuotas === 2) {
       window.open(LINK_2C, '_blank');
     } else {
@@ -945,7 +944,7 @@
   }
   function confirmarCBU() {
     datos.metodoPago = 'Transferencia CBU';
-    trackPago('Transferencia CBU');
+    enviarContrato();
     const montoStr = plan.cuotas === 2
       ? `1° cuota de $${plan.monto.toLocaleString('es-AR')}`
       : `pago único de $${plan.monto.toLocaleString('es-AR')}`;
