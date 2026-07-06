@@ -104,6 +104,13 @@
     }
     .btn-wa:hover { opacity: .9; }
     .disclaimer { font-size: 11px; color: var(--muted); text-align: center; margin-top: 14px; line-height: 1.5; }
+    .faq-item { border: 1.5px solid #E2E8F0; border-radius: 10px; margin-bottom: 8px; overflow: hidden; background: #fff; }
+    .faq-q { width: 100%; background: transparent; border: none; padding: 14px 16px; text-align: left; font-size: 13.5px; font-weight: 700; color: #111827; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 10px; line-height: 1.4; }
+    .faq-item.faq-open .faq-q { color: #0D1B6E; background: #EEF2FF; }
+    .faq-icon { font-size: 22px; font-weight: 300; flex-shrink: 0; transition: transform .25s; color: #6B7280; }
+    .faq-item.faq-open .faq-icon { transform: rotate(45deg); color: #0D1B6E; }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height .3s ease, padding .3s ease; padding: 0 16px; font-size: 13px; color: #374151; line-height: 1.7; }
+    .faq-item.faq-open .faq-a { max-height: 300px; padding: 4px 16px 16px; }
     .btn-copy { background:#2563eb;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .2s; }
     .btn-copy.ok { background:#16a34a; }
 
@@ -504,6 +511,61 @@
         <div style="font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;">🔎 Empresa verificable en ARCA</div>
         <div style="font-size:12.5px;color:#6B7280;line-height:1.6;">
           Al contratar recibís nuestros datos completos: teléfono, dirección física y CUIT. Podés verificarnos en ARCA en segundos y confirmar que somos una entidad legalmente constituida.
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div style="margin-bottom:20px;">
+        <div style="font-size:12px;font-weight:700;color:#6B7280;text-transform:uppercase;letter-spacing:.5px;margin-bottom:12px;">❓ Preguntas frecuentes</div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Es legal reclamar ante el Veraz?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Sí, y no solo es legal: es un <strong>derecho constitucional</strong>. La Ley 25.326 de Protección de Datos Personales y la acción de <strong>Habeas Data</strong> te garantizan el derecho a exigir la rectificación o eliminación de datos incorrectos en cualquier base de datos comercial. Veraz está legalmente obligada a responder en un máximo de <strong>5 días hábiles</strong>. Nuestro trabajo es ejercer ese derecho por vos, con toda la documentación necesaria.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Qué pasa si el reclamo no resulta?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Nuestra obligación es de <strong>medio, no de resultado</strong>, como lo establece la propia Ley 25.326. Nos comprometemos a realizar todas las gestiones profesionales necesarias ante Veraz. Si el rechazo se debe a una decisión de la entidad crediticia ajena a nuestra gestión, no corresponde devolución. Sí <strong>devolvemos el dinero</strong> si hubo un error administrativo de nuestra parte o si el pago no fue acreditado correctamente.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Por qué tengo que pagar si reclamar es mi derecho?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Tenés razón: reclamar es un derecho gratuito. Pero como cualquier gestión legal o administrativa (un trámite notarial, una declaración impositiva), el <strong>tiempo, el conocimiento y el trabajo profesional tienen un costo</strong>. Nuestro equipo hace el análisis, prepara la documentación, contacta con los responsables de la base de datos y da seguimiento hasta la resolución. <strong>Vos no hacés nada</strong>, nosotros gestionamos todo.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Mis datos personales están seguros?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Absolutamente. Trabajamos bajo la misma <strong>Ley 25.326</strong> que protege tus datos frente a Veraz, lo que nos obliga a nosotros también. Tu información (nombre, DNI, situación crediticia) es confidencial, se usa exclusivamente para la gestión de tu caso y <strong>nunca se comparte con terceros</strong>. Somos APG Global SRL, empresa verificable en ARCA con CUIT 30-71692136-7.
+          </div>
+        </div>
+
+        <div class="faq-item">
+          <button class="faq-q" onclick="toggleFaq(this)">
+            ¿Cuánto tiempo tarda realmente?
+            <span class="faq-icon">+</span>
+          </button>
+          <div class="faq-a">
+            Por ley, Veraz tiene un máximo de <strong>5 días hábiles</strong> para responder desde el ingreso del reclamo (Art. 16 inc. 2, Ley 25.326). Desde que confirmás el contrato, nuestro equipo inicia el análisis <strong>el mismo día</strong>. La mayoría de nuestros clientes ven su historial actualizado dentro de esa ventana. Te mantenemos informado día a día sobre el avance de tu caso.
+          </div>
         </div>
       </div>
 
@@ -997,6 +1059,12 @@
         fechaPago: fechaSel, metodoPago: datos.metodoPago || '',
       }),
     }).catch(() => {});
+  }
+  function toggleFaq(btn) {
+    const item = btn.parentElement;
+    const isOpen = item.classList.contains('faq-open');
+    document.querySelectorAll('.faq-item.faq-open').forEach(i => i.classList.remove('faq-open'));
+    if (!isOpen) item.classList.add('faq-open');
   }
   function trackFunnel(paso) {
     fetch(GAS_ADHESION, {
