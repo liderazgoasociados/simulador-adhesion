@@ -977,6 +977,7 @@
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
+        secret: 'LDA_k9x2026',
         action: 'track', paso: '7_pago',
         wa: datos.telefono || '', waOperador: WA_NUMBER,
         nombre: datos.nombre, email: datos.email, dni: datos.dni,
@@ -1058,6 +1059,7 @@
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
+        secret: 'LDA_k9x2026',
         action: 'contrato',
         paso: '5_confirmacion',
         nombre: datos.nombre, email: datos.email, dni: datos.dni,
@@ -1078,6 +1080,7 @@
       method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify({
+        secret: 'LDA_k9x2026',
         action: 'track', paso,
         nombre: datos.nombre || '', email: datos.email || '',
         dni: datos.dni || '', wa: datos.telefono || '',
