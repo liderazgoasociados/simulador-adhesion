@@ -385,19 +385,19 @@
         <div style="font-size:13px;color:#6B7280;margin-top:6px;">Seleccioná todo lo que aplica a tu situación</div>
       </div>
 
-      <div class="checkpoint" onclick="this.classList.toggle('sel')">
+      <div class="checkpoint" id="cp1" onclick="this.classList.toggle('sel')">
         <div class="cp-box"><span class="cp-check">✓</span></div>
         <div class="cp-text">Quiero volver a tener tarjetas y préstamos.</div>
       </div>
-      <div class="checkpoint" onclick="this.classList.toggle('sel')">
+      <div class="checkpoint" id="cp2" onclick="this.classList.toggle('sel')">
         <div class="cp-box"><span class="cp-check">✓</span></div>
         <div class="cp-text">Necesito comprar electrodomésticos.</div>
       </div>
-      <div class="checkpoint" onclick="this.classList.toggle('sel')">
+      <div class="checkpoint" id="cp3" onclick="this.classList.toggle('sel')">
         <div class="cp-box"><span class="cp-check">✓</span></div>
         <div class="cp-text">Necesito salir del Veraz porque mi sueldo no me alcanza.</div>
       </div>
-      <div class="checkpoint" onclick="this.classList.toggle('sel')">
+      <div class="checkpoint" id="cp4" onclick="this.classList.toggle('sel')">
         <div class="cp-box"><span class="cp-check">✓</span></div>
         <div class="cp-text">Soy jubilado y/o pensionado.</div>
       </div>
@@ -820,7 +820,7 @@
   // ── CONFIG ────────────────────────────────────────────────────────────────
   const GAS_SIMULADOR = 'https://script.google.com/macros/s/AKfycby2AEDmjqRUrKAeFeUhLrx0OfOp5UZy2l71zheS8IWZXevj7PkmYlE_YytNPcitXPJXUQ/exec';
   const GAS_ADHESION  = 'https://script.google.com/macros/s/AKfycbwggkZ5VJg11wgwuuqw5YrsdFOTGbYcIovd2ty38c_ohZWn-BnKTdoe2LUrJ6MrS2DEmg/exec';
-  const WA_DEFAULT    = '5491158773098';
+  const WA_DEFAULT    = '5491166844903';
   const LINK_2C       = 'https://gestionesapg.com/48100-2/';
   const LINK_1C       = 'https://gestionesapg.com/96200-2/';
 
@@ -949,6 +949,10 @@
 
   // ── Pasos: adhesión ───────────────────────────────────────────────────────
   function irAServicio() {
+    const labels = { cp1: 'Tarjetas/préstamos', cp2: 'Electrodomésticos', cp3: 'Salir del Veraz', cp4: 'Jubilado/pensionado' };
+    datos.checkpoints = ['cp1','cp2','cp3','cp4']
+      .filter(id => document.getElementById(id).classList.contains('sel'))
+      .map(id => labels[id]).join(' | ') || 'Ninguno';
     trackFunnel('4_servicio');
     showStep('stepServicio');
     setLabel(3, 'Paso 3 — Conocé el servicio', 42);
@@ -983,6 +987,7 @@
         nombre: datos.nombre, email: datos.email, dni: datos.dni,
         cuotas: plan.cuotas, montoCuota: plan.monto,
         fechaPago: fechaSel, metodoPago: metodo,
+        checkpoints: datos.checkpoints || '',
       }),
     }).then(r => r.json()).catch(() => {});
   }
@@ -1066,6 +1071,7 @@
         wa: datos.telefono || '', waOperador: WA_NUMBER,
         cuotas: plan.cuotas, montoCuota: plan.monto,
         fechaPago: fechaSel, metodoPago: datos.metodoPago || '',
+        checkpoints: datos.checkpoints || '',
       }),
     }).catch(() => {});
   }
@@ -1086,6 +1092,7 @@
         dni: datos.dni || '', wa: datos.telefono || '',
         waOperador: WA_NUMBER,
         cuotas: plan.cuotas, montoCuota: plan.monto, fechaPago: fechaSel,
+        checkpoints: datos.checkpoints || '',
       }),
     }).catch(() => {});
   }
