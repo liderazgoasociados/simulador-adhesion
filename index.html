@@ -841,10 +841,48 @@
   const LINK_1C       = 'https://gestionesapg.com/96200-2/';
 
   const params    = new URLSearchParams(window.location.search);
-  const WA_NUMBER = params.get('wa') || WA_DEFAULT;
+  let   WA_NUMBER = params.get('wa') || WA_DEFAULT;
 
   let datos   = { nombre: '', email: '', telefono: '', dni: '' };
   let viaSkip = false;
+
+  // ── Resumen automático de embudo (clientes que vuelven, 21/07/2026) ──────
+  // Si en una visita anterior llegó a guardar su teléfono (localStorage,
+  // mismo navegador/dispositivo), consultamos al backend en qué paso se
+  // quedó y lo llevamos directo ahí, sin repetir todo el simulador de nuevo.
+  // No pisa el mecanismo de skip link (?skip=1&...), que sigue funcionando
+  // igual para links enviados manualmente por un operador.
+  const TEL_KEY = 'lda_tel_progreso';
+  const RESUME_STEP = {
+    '1_datos':        () => { showStep('step2'); setLabel(2, 'Paso 2 — Verificación crediticia', 28); },
+    '2_dni':          () => { renderResultado(); },
+    '3_resultado':    () => { renderResultado(); },
+    '4_servicio':     () => { showStep('stepServicio'); setLabel(3, 'Paso 3 — Conocé el servicio', 42); },
+    '5_confirmacion': () => { initFechas(); showStep('stepPago'); setLabel(5, 'Paso 5 — Elegí cómo abonar', 71); },
+    '6_fecha':        () => { initFechas(); actualizarResumen(); showStep('stepFecha'); setLabel(6, 'Paso 6 — Fecha y pago', 85); },
+    '7_pago':         () => { mostrarExito(); },
+  };
+  function intentarResumir(tel) {
+    fetch(GAS_ADHESION + '?consultar=1&tel=' + encodeURIComponent(tel) + '&secret=LDA_k9x2026')
+      .then(r => r.json())
+      .then(res => {
+        if (!res || !res.ok || !res.encontrado || !res.paso || !RESUME_STEP[res.paso]) return;
+        datos.nombre      = res.nombre || datos.nombre;
+        datos.email       = res.email  || datos.email;
+        datos.dni         = res.dni    || datos.dni;
+        datos.telefono    = tel;
+        datos.checkpoints = res.checkpoints || datos.checkpoints;
+        if (res.cuotas)     plan.cuotas = res.cuotas;
+        if (res.montoCuota) plan.monto  = res.montoCuota;
+        if (!params.get('wa') && res.waOperador) WA_NUMBER = res.waOperador;
+        RESUME_STEP[res.paso]();
+      })
+      .catch(() => { /* si falla la consulta, sigue el flujo normal desde el paso 1 */ });
+  }
+  if (params.get('skip') !== '1') {
+    const telGuardado = localStorage.getItem(TEL_KEY);
+    if (telGuardado) document.addEventListener('DOMContentLoaded', () => intentarResumir(telGuardado));
+  }
 
   // Modo skip: muestra el step de servicio SIN trackear al cargar
   // El tracking '4_servicio' se dispara recién cuando el cliente hace clic en "Quiero avanzar"
@@ -926,6 +964,7 @@
     datos.nombre   = nombre;
     datos.telefono = telefono;
     datos.email    = email;
+    localStorage.setItem(TEL_KEY, telefono);
     trackFunnel('1_datos');
     showStep('step2');
     setLabel(2, 'Paso 2 — Verificación crediticia', 28);
@@ -954,13 +993,14 @@
   }
   function mostrarResultado() {
     trackFunnel('3_resultado');
+    renderResultado();
+  }
+  function renderResultado() {
     document.getElementById('stepLabel').style.display = 'none';
     showStep('stepResult');
     document.getElementById('resultMsg').innerHTML =
       `Hola <strong>${datos.nombre || ''}</strong>, encontramos <strong>observaciones en tu historial</strong>
        que impiden la aprobación automática. Sin embargo, tenemos la solución para tu caso.`;
-    const msg = encodeURIComponent('Hola! Acabo de hacer la consulta y me gustaría hablar con un asesor sobre mi situación.');
-    document.getElementById('btnWa').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
   }
 
   // ── Pasos: adhesión ───────────────────────────────────────────────────────
@@ -1048,6 +1088,7 @@
     return e && e.trim() && e.toLowerCase() !== 'xxx@xxx.com' && !e.startsWith('xxx@') && e.includes('@');
   }
   function mostrarExito() {
+    localStorage.removeItem(TEL_KEY);
     showStep('stepExito');
     document.getElementById('stepLabel').style.display = 'none';
     document.getElementById('progressBar').style.width = '100%';
