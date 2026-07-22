@@ -862,11 +862,13 @@
     '6_fecha':        () => { initFechas(); actualizarResumen(); showStep('stepFecha'); setLabel(6, 'Paso 6 — Fecha y pago', 85); },
     '7_pago':         () => { mostrarExito(); },
   };
+  // Consulta el progreso guardado para un teléfono. Devuelve una Promise<boolean>
+  // (true = encontró paso y ya saltó ahí; false = no hay nada para resumir).
   function intentarResumir(tel) {
-    fetch(GAS_ADHESION + '?consultar=1&tel=' + encodeURIComponent(tel) + '&secret=LDA_k9x2026')
+    return fetch(GAS_ADHESION + '?consultar=1&tel=' + encodeURIComponent(tel) + '&secret=LDA_k9x2026')
       .then(r => r.json())
       .then(res => {
-        if (!res || !res.ok || !res.encontrado || !res.paso || !RESUME_STEP[res.paso]) return;
+        if (!res || !res.ok || !res.encontrado || !res.paso || !RESUME_STEP[res.paso]) return false;
         datos.nombre      = res.nombre || datos.nombre;
         datos.email       = res.email  || datos.email;
         datos.dni         = res.dni    || datos.dni;
@@ -876,8 +878,9 @@
         if (res.montoCuota) plan.monto  = res.montoCuota;
         if (!params.get('wa') && res.waOperador) WA_NUMBER = res.waOperador;
         RESUME_STEP[res.paso]();
+        return true;
       })
-      .catch(() => { /* si falla la consulta, sigue el flujo normal desde el paso 1 */ });
+      .catch(() => false); // si falla la consulta, sigue el flujo normal
   }
   if (params.get('skip') !== '1') {
     const telGuardado = localStorage.getItem(TEL_KEY);
@@ -965,9 +968,21 @@
     datos.telefono = telefono;
     datos.email    = email;
     localStorage.setItem(TEL_KEY, telefono);
-    trackFunnel('1_datos');
-    showStep('step2');
-    setLabel(2, 'Paso 2 — Verificación crediticia', 28);
+
+    // Antes de seguir el flujo normal, consulta si este teléfono ya tiene
+    // progreso guardado (cubre el caso de un dispositivo/navegador distinto
+    // al que usó la vez anterior — ahí no hay nada en localStorage, pero al
+    // escribir el mismo teléfono lo reconocemos igual). Ver [[project_simulador_adhesion]].
+    const btn = document.querySelector('#step1 .btn-primary');
+    if (btn) { btn.disabled = true; btn.style.opacity = '.6'; }
+    intentarResumir(telefono).then(resumido => {
+      if (resumido) return;
+      trackFunnel('1_datos');
+      showStep('step2');
+      setLabel(2, 'Paso 2 — Verificación crediticia', 28);
+    }).finally(() => {
+      if (btn) { btn.disabled = false; btn.style.opacity = ''; }
+    });
   }
   function volverAPaso1() {
     showStep('step1');
