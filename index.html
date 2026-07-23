@@ -1004,16 +1004,6 @@
     });
 
     trackFunnel('2_dni');
-    // Lead → sheet histórico del Simulador (1M8TB), en paralelo al embudo de Adhesión.
-    fetch(GAS_SIMULADOR, {
-      method: 'POST', mode: 'no-cors',
-      headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({
-        secret: 'LDA_k9x2026',
-        nombre: datos.nombre, telefono: datos.telefono,
-        email: datos.email, dni: datos.dni, waNumero: WA_NUMBER,
-      }),
-    }).catch(() => {});
     setTimeout(mostrarResultado, 4600);
   }
   function mostrarResultado() {
